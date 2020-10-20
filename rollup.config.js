@@ -3,6 +3,7 @@ const commonjs = require('rollup-plugin-commonjs');
 const license = require('rollup-plugin-license');
 const json = require('rollup-plugin-json');
 const { terser } = require('rollup-plugin-terser');
+const globals = require('rollup-plugin-node-globals');
 
 const pkg = require('./package.json');
 
@@ -12,6 +13,7 @@ const PLUGINS = [
   resolve(),
   commonjs(),
   json(),
+  globals(),
   terser({
     compress: { warnings: false },
     output: { comments: false },
