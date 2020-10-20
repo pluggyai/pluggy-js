@@ -1,0 +1,39 @@
+{
+  "name": "pluggy-js",
+  "version": "0.1.1",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "release": "npm i && npm run build && npm publish",
+    "release:next": "npm i && npm run build && npm publish --tag next",
+    "prettier-fix": "prettier --write \"src/**/*.ts\"",
+    "lint": "npm run prettier-fix && eslint . --ext .ts",
+    "lint:fix": "npm run lint -- --fix"
+  },
+  "repository": "https://github.com/pluggyai/pluggy-js",
+  "keywords": [
+    "pluggy",
+    "pluggyapi",
+    "aggregation",
+    "pluggy-sdk",
+    "pluggy-js",
+    "web",
+    "browser"
+  ],
+  "dependencies": {
+    "axios": "^0.20.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.16.0",
+    "@typescript-eslint/parser": "^2.16.0",
+    "eslint": "^6.8.0",
+    "prettier": "^1.19.1",
+    "typescript": "^3.5.1"
+  }
+}
