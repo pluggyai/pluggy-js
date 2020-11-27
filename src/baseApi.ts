@@ -18,7 +18,6 @@ export class BaseApi {
   getServiceInstance(): AxiosInstance {
     if (!this.service) {
       const config = {
-        withCredentials: true,
         headers: {
           'X-API-KEY': this.apiKey,
           'Content-Type': 'application/json',
