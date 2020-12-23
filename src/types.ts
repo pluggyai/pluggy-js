@@ -250,6 +250,13 @@ export type Item = {
 export type ErrorResponse = {
   code: number
   message: string
+  details?: ErrorDetail[]
+}
+
+export type ErrorDetail = {
+  code: string
+  message: string
+  parameter: string
 }
 
 export type PageResponse<T> = {
