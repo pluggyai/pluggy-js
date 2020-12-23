@@ -5,9 +5,9 @@ type QueryParameters = { [key: string]: number | number[] | string | string[] | 
 export class BaseApi {
   private service: AxiosInstance
   private apiKey: string
-  private baseUrl?: string
+  private baseUrl: string
 
-  constructor(accessToken: string, baseUrl: string = 'https://api.pluggy.ai') {
+  constructor(accessToken: string, baseUrl = 'https://api.pluggy.ai') {
     if (!accessToken) {
       throw new Error('Missing authorization for API communication')
     }
@@ -112,7 +112,7 @@ export class BaseApi {
   }
 
   protected mapToQueryString(params: QueryParameters): string {
-    if (!params) {
+    if (!params || Object.keys(params).length === 0) {
       return ''
     }
 
