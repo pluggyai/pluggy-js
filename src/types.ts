@@ -240,12 +240,44 @@ export type Item = {
   id: string
   connector: Connector
   status: ItemStatus
-  executionStatus: string
+  executionStatus: ExecutionStatus
   createdAt: Date
+  updatedAt: Date
   lastUpdatedAt?: Date
   parameter?: ConnectorCredential | null
-  error?: ErrorResponse
+  error?: ErrorResponse | null
+  webhookUrl?: string | null
 }
+
+export enum ExecutionStatus {
+  CREATING = 'CREATING',
+  CREATE_ERROR = 'CREATE_ERROR',
+  LOGIN_IN_PROGRESS = 'LOGIN_IN_PROGRESS',
+  WAITING_USER_INPUT = 'WAITING_USER_INPUT',
+  INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
+  ALREADY_LOGGED_IN = 'ALREADY_LOGGED_IN',
+  INVALID_CREDENTIALS_MFA = 'INVALID_CREDENTIALS_MFA',
+  SITE_NOT_AVAILABLE = 'SITE_NOT_AVAILABLE',
+  ACCOUNTS_IN_PROGRESS = 'ACCOUNTS_IN_PROGRESS',
+  CREDITCARDS_IN_PROGRESS = 'CREDITCARDS_IN_PROGRESS',
+  TRANSACTIONS_IN_PROGRESS = 'TRANSACTIONS_IN_PROGRESS',
+  INVESTMENTS_IN_PROGRESS = 'INVESTMENTS_IN_PROGRESS',
+  IDENTITY_IN_PROGRESS = 'IDENTITY_IN_PROGRESS',
+  MERGING = 'MERGING',
+  MERGE_ERROR = 'MERGE_ERROR',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR'
+}
+
+export const FINISHED_STATUS: ExecutionStatus[] = [
+  ExecutionStatus.ERROR,
+  ExecutionStatus.SUCCESS,
+  ExecutionStatus.MERGE_ERROR,
+  ExecutionStatus.INVALID_CREDENTIALS,
+  ExecutionStatus.ALREADY_LOGGED_IN,
+  ExecutionStatus.INVALID_CREDENTIALS_MFA,
+  ExecutionStatus.SITE_NOT_AVAILABLE,
+];
 
 export type ErrorResponse = {
   code: number
@@ -264,7 +296,9 @@ export type PageResponse<T> = {
 }
 
 export enum ItemStatus {
+  CREATING = 'CREATING',
   LOGIN_ERROR = 'LOGIN_ERROR',
+  MERGING = 'MERGING',
   OUTDATED = 'OUTDATED',
   UPDATED = 'UPDATED',
   UPDATING = 'UPDATING',
