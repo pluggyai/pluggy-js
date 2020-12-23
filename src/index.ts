@@ -42,7 +42,7 @@ export default class Pluggy extends BaseApi {
    * Fetch all items from the client
    * @returns {Item[]} list of connected items
    */
-  async fetchItems(): Promise<Item[]> {
+  async fetchItems(): Promise<PageResponse<Item>> {
     return this.createGetRequest(`items`)
   }
 
@@ -104,6 +104,7 @@ export default class Pluggy extends BaseApi {
   /**
    * Fetch accounts from an Item
    * @param itemId The Item id
+   * @param type - AccountType filter (optional)
    * @returns {Account[]} an array of accounts
    */
   async fetchAccounts(itemId: string, type?: AccountType): Promise<PageResponse<Account>> {
@@ -142,6 +143,7 @@ export default class Pluggy extends BaseApi {
   /**
    * Fetch investments from an Item
    * @param itemId The Item id
+   * @param type - InvestmentType filter (optional)
    * @returns {Investment[]} an array of investments
    */
   async fetchInvestments(itemId: string, type?: InvestmentType): Promise<PageResponse<Investment>> {
