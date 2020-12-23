@@ -174,15 +174,32 @@ export type Transaction = {
  * @type {object}
  * @property {string} label - parameter label that describes it
  * @property {string} name - parameter key name
- * @property {string} type - type of parameter to create the form
+ * @property {CredentialType} type - type of parameter, used to create the form
  * @property {boolean} mfa - If parameter is used for MFA.
+ * @property {string} placeholder - Text to use for parameter placeholder in form
+ * @property {string} validation - Validation regex to check on the submitted parameter value, before execution
+ * @property {string} validationMessage - Validation error message to show to the user
+ * @property {boolean} optional - Useful to allow the user to skip/ignoring an unneeded parameter
  */
 export type ConnectorCredential = {
   label: string
   name: string
-  type?: 'text' | 'password' | 'number'
+  type?: CredentialType
   mfa?: boolean
+  placeholder?: string
+  validation?: string
+  validationMessage?: string
+  optional: boolean
 }
+
+/*
+ *  @typedef ConnectorCredential
+ * credential type, used to show a proper form input to the user
+ * 'number' -> numeric only data
+ * 'text' -> alpha-numeric data
+ * 'password' -> alpha-numeric password, must be obfuscated
+ */
+export type CredentialType = 'number' | 'password' | 'text'
 
 /*
  * @typedef Connector
@@ -194,17 +211,19 @@ export type ConnectorCredential = {
  * @property {string} primaryColor - Primary color of the institution
  * @property {string} country - Country of the institution
  * @property {string} type - Type of the connector
- * @property {any} credentials - List of parameters needed to execute the connector
+ * @property {ConnectorCredential[]} credentials - List of parameters needed to execute the connector
+ * @property {string} oauthUrl - (only for OAuth connector) this URL is used to connect the user and on success it will redirect to create the new item
  */
 export type Connector = {
-  id: string
+  id: number
   name: string
   institutionUrl: string
   imageUrl: string
-  primaryColor: string
+  primaryColor: string | null
   type: ConnectorType
   country: string
   credentials: ConnectorCredential[]
+  oauthUrl?: string
 }
 
 /*
@@ -224,7 +243,13 @@ export type Item = {
   executionStatus: string
   createdAt: Date
   lastUpdatedAt?: Date
-  parameter?: ConnectorCredential
+  parameter?: ConnectorCredential | null
+  error?: ErrorResponse
+}
+
+export type ErrorResponse = {
+  code: number
+  message: string
 }
 
 export type PageResponse<T> = {
