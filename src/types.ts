@@ -1,4 +1,4 @@
-/*
+/**
  * @typedef TransactionFilters
  * @type {object}
  * @property {string} from - filter greater than date. Format (ISO Date | yyyy-mm-dd)
@@ -13,7 +13,7 @@ export type TransactionFilters = {
   page?: number
 }
 
-/*
+/**
  * @typedef ConnectorFilters
  * @type {object}
  * @property {string} name - Connector´s name or alike name
@@ -32,7 +32,7 @@ export type CurrencyCode = 'USD' | 'ARS' | 'BRL'
 export type AccountType = 'BANK' | 'CREDIT'
 export type AccountSubType = 'SAVINGS_ACCOUNT' | 'CHECKINGS_ACCOUNT' | 'CREDIT_CARD'
 export type InvestmentType = 'MUTUAL_FUND' | 'SECURITY' | 'EQUITY'
-/*
+/**
  * @typedef Category
  * @type {object}
  * @property {string} id - primary identifier of the category
@@ -47,7 +47,7 @@ export type Category = {
   parentDescription?: string
 }
 
-/*
+/**
  * @typedef Investment
  * @type {object}
  * @property {string} id - primary identifier of the investment
@@ -84,7 +84,7 @@ export type Investment = {
   amountProfit?: number
 }
 
-/*
+/**
  * @typedef Account
  * @type {object}
  * @property {string} id - primary identifier of the account
@@ -115,7 +115,7 @@ export type Account = {
   creditData?: CreditData
 }
 
-/*
+/**
  * @typedef BankData
  * @type {object}
  * @property {string} transferNumber - primary identifier of the account to make bank transfers
@@ -126,7 +126,7 @@ export type BankData = {
   closingBalance?: number
 }
 
-/*
+/**
  * @typedef CreditData
  * @type {object}
  * @property {string} level - Credit card client's level
@@ -147,7 +147,7 @@ export type CreditData = {
   minimumPayment?: number
 }
 
-/*
+/**
  * @typedef Transaction
  * @type {object}
  * @property {string} id - primary identifier of the transaction
@@ -169,7 +169,7 @@ export type Transaction = {
   providerCode?: string
 }
 
-/*
+/**
  * @typedef ConnectorCredential
  * @type {object}
  * @property {string} label - parameter label that describes it
@@ -192,7 +192,7 @@ export type ConnectorCredential = {
   optional: boolean
 }
 
-/*
+/**
  *  @typedef ConnectorCredential
  * credential type, used to show a proper form input to the user
  * 'number' -> numeric only data
@@ -201,7 +201,7 @@ export type ConnectorCredential = {
  */
 export type CredentialType = 'number' | 'password' | 'text'
 
-/*
+/**
  * @typedef Connector
  * @type {object}
  * @property {number} id - primary identifier of the connector
@@ -226,7 +226,7 @@ export type Connector = {
   oauthUrl?: string
 }
 
-/*
+/**
  * @typedef Item
  * @type {object}
  * @property {number} id - primary identifier of the Item
@@ -277,7 +277,7 @@ export const FINISHED_STATUS: ExecutionStatus[] = [
   ExecutionStatus.ALREADY_LOGGED_IN,
   ExecutionStatus.INVALID_CREDENTIALS_MFA,
   ExecutionStatus.SITE_NOT_AVAILABLE,
-];
+]
 
 export type ErrorResponse = {
   code: number
