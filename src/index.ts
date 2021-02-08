@@ -12,6 +12,7 @@ import {
   Item,
   PageResponse,
   IdentityResponse,
+  TransactionsPageResponse,
 } from './types'
 
 /**
@@ -137,7 +138,7 @@ export default class Pluggy extends BaseApi {
   async fetchTransactions(
     accountId: string,
     options: TransactionFilters = {}
-  ): Promise<PageResponse<Transaction>> {
+  ): Promise<TransactionsPageResponse> {
     return this.createGetRequest('transactions', { ...options, accountId })
   }
 
@@ -185,7 +186,7 @@ export default class Pluggy extends BaseApi {
 
   /**
    * Fetch all available categories
-   * @returns {Categories[]} an paging response of categories
+   * @returns {PageResponse<Category>[]} an paging response of categories
    */
   async fetchCategories(): Promise<PageResponse<Category>> {
     return this.createGetRequest('categories')
