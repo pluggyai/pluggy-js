@@ -205,6 +205,6 @@ export default class Pluggy extends BaseApi {
    * @returns {string} Access token to connect items with restrict access
    */
   async createConnectToken(): Promise<{ accessToken: string }> {
-    return this.createPostRequest(`connectTokens`)
+    return this.createPostRequest(`connecttokens`)
   }
 }
