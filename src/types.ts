@@ -1,8 +1,8 @@
 /**
  * @typedef TransactionFilters
  * @type {object}
- * @property {string} from - filter greater than date. Format (ISO Date | yyyy-mm-dd)
- * @property {string} to - filter greater than date. Format (ISO Date | yyyy-mm-dd)
+ * @property {string} from - filter greater or equal than date. Format (ISO Date | yyyy-mm-dd)
+ * @property {string} to - filter less or equal than date. Format (ISO Date | yyyy-mm-dd)
  * @property {number} pageSize - Amount of transactions to retrieve
  * @property {number} page - Page of transactions to retrieve, this calculates the offset.
  */
@@ -31,7 +31,14 @@ export type ConnectorFilters = {
 export type CurrencyCode = 'USD' | 'ARS' | 'BRL'
 export type AccountType = 'BANK' | 'CREDIT'
 export type AccountSubType = 'SAVINGS_ACCOUNT' | 'CHECKINGS_ACCOUNT' | 'CREDIT_CARD'
-export type InvestmentType = 'MUTUAL_FUND' | 'SECURITY' | 'EQUITY'
+export type InvestmentType =
+  | 'MUTUAL_FUND'
+  | 'EQUITY'
+  | 'SECURITY'
+  | 'FIXED_INCOME'
+  | 'ETF'
+  | 'OTHER'
+
 /**
  * @typedef Category
  * @type {object}
@@ -46,6 +53,13 @@ export type Category = {
   parentId?: string
   parentDescription?: string
 }
+
+
+/**
+ * @typedef InvestmentStatus
+ * @type {string}
+ */
+export type InvestmentStatus = 'ACTIVE' | 'PENDING' | 'TOTAL_WITHDRAWAL';
 
 /**
  * @typedef Investment
@@ -70,19 +84,42 @@ export type Investment = {
   id: string
   itemId: string
   type: InvestmentType
-  number: string
+  number: string | null
   balance: number
   name: string
-  annualRate?: number
+  annualRate: number | null
   currencyCode: CurrencyCode
-  date?: Date
-  value?: number
-  quantity?: number
-  taxes?: number
-  taxes2?: number
-  amountWithdrawal?: number
-  amountProfit?: number
+  date: Date | null
+  value: number | null
+  quantity: number | null
+  taxes: number | null
+  taxes2: number | null
+  amountProfit: number | null
+  amountWithdrawal: number | null
+
+  lastMonthRate: number | null;
+  lastTwelveMonthsRate: number | null;
+  code: string | null;
+  amount: number | null;
+  owner: string | null;
+  amountOriginal: number | null;
+  dueDate: Date | null;
+  issuer: string | null;
+  issueDate: Date | null;
+  rate: number | null;
+  rateType: string | null;
+  status: InvestmentStatus;
+  transactions: InvestmentTransaction[] | null;
 }
+
+export type InvestmentTransaction = {
+  type: string;
+  quantity: number;
+  value: number;
+  amount: number;
+  date: Date;
+  tradeDate: Date | null;
+};
 
 /**
  * @typedef Account
@@ -107,9 +144,9 @@ export type Account = {
   number: string
   balance: number
   name: string
-  marketingName?: string
-  owner?: string
-  taxNumber?: string
+  marketingName: string | null
+  owner: string | null
+  taxNumber: string | null
   currencyCode: CurrencyCode
   bankData?: BankData
   creditData?: CreditData
@@ -122,8 +159,8 @@ export type Account = {
  * @property {string} closingBalance - available balance of the account
  */
 export type BankData = {
-  transferNumber?: string
-  closingBalance?: number
+  transferNumber: string | null
+  closingBalance: number | null
 }
 
 /**
@@ -138,13 +175,14 @@ export type BankData = {
  * @property {number} availableCreditLimit - Available credit limit to use.
  */
 export type CreditData = {
-  level?: string
-  brand?: string
-  balanceCloseDate?: Date
-  balanceDueDate?: Date
-  availableCreditLimit?: number
-  balanceForeignCurrency?: number
-  minimumPayment?: number
+  level: string | null
+  brand: string | null
+  balanceCloseDate: Date | null
+  balanceDueDate: Date | null
+  availableCreditLimit: number | null
+  balanceForeignCurrency: number | null
+  minimumPayment: number | null
+  creditLimit: number | null
 }
 
 /**
@@ -166,7 +204,7 @@ export type Transaction = {
   amount: number
   balance: number
   currencyCode: CurrencyCode
-  providerCode?: string
+  providerCode: string | null
 }
 
 /**
@@ -298,6 +336,12 @@ export type PageResponse<T> = {
   results: T[]
 }
 
+export type TransactionsPageResponse = PageResponse<Transaction> & {
+  page: number
+  total: number
+  totalPages: number
+}
+
 export enum ItemStatus {
   CREATING = 'CREATING',
   LOGIN_ERROR = 'LOGIN_ERROR',
@@ -325,7 +369,7 @@ export type IdentityResponse = {
 }
 
 export type PhoneNumber = {
-  type?: 'Personal' | 'Work' | 'Residencial'
+  type?: 'Personal' | 'Work' | 'Residencial' | null
   value: string
 }
 
@@ -335,17 +379,17 @@ export type Email = {
 }
 
 export type IdentityRelation = {
-  type?: 'Mother' | 'Father' | 'Spouse'
-  name?: string
-  document?: string
+  type?: 'Mother' | 'Father' | 'Spouse' | null
+  name?: string | null
+  document?: string | null
 }
 
 export type Address = {
-  fullAddress?: string
-  primaryAddress?: string
-  city?: string
-  postalCode?: string
-  state?: string
-  country?: string
-  type?: 'Personal' | 'Work'
+  fullAddress?: string | null
+  primaryAddress?: string | null
+  city?: string | null
+  postalCode?: string | null
+  state?: string | null
+  country?: string | null
+  type?: 'Personal' | 'Work'| null
 }
