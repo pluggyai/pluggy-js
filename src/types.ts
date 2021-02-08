@@ -193,7 +193,7 @@ export type ConnectorCredential = {
 }
 
 /**
- *  @typedef ConnectorCredential
+ * @typedef CredentialType
  * credential type, used to show a proper form input to the user
  * 'number' -> numeric only data
  * 'text' -> alpha-numeric data
@@ -212,6 +212,7 @@ export type CredentialType = 'number' | 'password' | 'text'
  * @property {string} country - Country of the institution
  * @property {string} type - Type of the connector
  * @property {ConnectorCredential[]} credentials - List of parameters needed to execute the connector
+ * @property {boolean} hasMfa - if true, the connection will expect an MFA token credential. If a credential is "mfa: true", it will be requested on the same step (1-step MFA), otherwise it will be requested as an extra step (2-step MFA).
  * @property {string} oauthUrl - (only for OAuth connector) this URL is used to connect the user and on success it will redirect to create the new item
  */
 export type Connector = {
@@ -223,6 +224,7 @@ export type Connector = {
   type: ConnectorType
   country: string
   credentials: ConnectorCredential[]
+  hasMFA: boolean
   oauthUrl?: string
 }
 
@@ -234,19 +236,20 @@ export type Connector = {
  * @property {string} status - Current status of the item
  * @property {string} executionStatus - Current execution status of item.
  * @property {Date} createdAt - Date of the first connection
- * @property {Date} lastUpdatedAt - Last connection sync date with the institution.
+ * @property {Date} updatedAt - Date of the last update on the connection
+ * @property {Date} lastUpdatedAt - Date of the last successful connection sync of the institution data.
  */
 export type Item = {
   id: string
-  connector: Connector
   status: ItemStatus
+  connector: Connector
   executionStatus: ExecutionStatus
   createdAt: Date
   updatedAt: Date
-  lastUpdatedAt?: Date
+  lastUpdatedAt: Date | null
   parameter?: ConnectorCredential | null
-  error?: ErrorResponse | null
-  webhookUrl?: string | null
+  error: ErrorResponse | null
+  webhookUrl: string | null
 }
 
 export enum ExecutionStatus {
@@ -266,7 +269,7 @@ export enum ExecutionStatus {
   MERGING = 'MERGING',
   MERGE_ERROR = 'MERGE_ERROR',
   SUCCESS = 'SUCCESS',
-  ERROR = 'ERROR'
+  ERROR = 'ERROR',
 }
 
 export const FINISHED_STATUS: ExecutionStatus[] = [

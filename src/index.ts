@@ -59,12 +59,18 @@ export default class Pluggy extends BaseApi {
    * Creates an item
    * @param connectorId The Connector's id
    * @param parameters A map of name and value for the needed credentials
+   * @param webhookUrl - The webhookUrl to send item notifications to (optional)
    * @returns {Item} a item object
    */
-  async createItem(connectorId: number, parameters: { [key: string]: string }): Promise<Item> {
+  async createItem(
+    connectorId: number,
+    parameters: Record<string, string>,
+    webhookUrl?: string
+  ): Promise<Item> {
     return this.createPostRequest(`items`, null, {
       connectorId,
       parameters,
+      webhookUrl,
     })
   }
 
@@ -72,12 +78,18 @@ export default class Pluggy extends BaseApi {
    * Updates an item
    * @param id The Item ID
    * @param parameters A map of name and value for the credentials to be updated
+   * @param webhookUrl - The new webhookUrl to send item notifications to (optional)
    * @returns {Item} a item object
    */
-  async updateItem(id: string, parameters: { [key: string]: string } = undefined): Promise<Item> {
+  async updateItem(
+    id: string,
+    parameters?: Record<string, string>,
+    webhookUrl?: string
+  ): Promise<Item> {
     return this.createPatchRequest(`items/${id}`, null, {
       id,
       parameters,
+      webhookUrl,
     })
   }
 
@@ -87,10 +99,7 @@ export default class Pluggy extends BaseApi {
    * @param parameters A map of name and value for the mfa requested
    * @returns {Item} a item object
    */
-  async updateItemMFA(
-    id: string,
-    parameters: { [key: string]: string } = undefined
-  ): Promise<Item> {
+  async updateItemMFA(id: string, parameters?: Record<string, string>): Promise<Item> {
     return this.createPostRequest(`items/${id}/mfa`, null, parameters)
   }
 
