@@ -13,6 +13,7 @@ import {
   PageResponse,
   IdentityResponse,
   TransactionsPageResponse,
+  ValidationErrorResponse,
 } from './types'
 
 /**
@@ -67,7 +68,7 @@ export default class Pluggy extends BaseApi {
     connectorId: number,
     parameters: Record<string, string>,
     webhookUrl?: string
-  ): Promise<Item> {
+  ): Promise<Item | ValidationErrorResponse> {
     return this.createPostRequest(`items`, null, {
       connectorId,
       parameters,
@@ -86,7 +87,7 @@ export default class Pluggy extends BaseApi {
     id: string,
     parameters?: Record<string, string>,
     webhookUrl?: string
-  ): Promise<Item> {
+  ): Promise<Item | ValidationErrorResponse> {
     return this.createPatchRequest(`items/${id}`, null, {
       id,
       parameters,

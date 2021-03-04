@@ -54,12 +54,11 @@ export type Category = {
   parentDescription?: string
 }
 
-
 /**
  * @typedef InvestmentStatus
  * @type {string}
  */
-export type InvestmentStatus = 'ACTIVE' | 'PENDING' | 'TOTAL_WITHDRAWAL';
+export type InvestmentStatus = 'ACTIVE' | 'PENDING' | 'TOTAL_WITHDRAWAL'
 
 /**
  * @typedef Investment
@@ -97,29 +96,29 @@ export type Investment = {
   amountProfit: number | null
   amountWithdrawal: number | null
 
-  lastMonthRate: number | null;
-  lastTwelveMonthsRate: number | null;
-  code: string | null;
-  amount: number | null;
-  owner: string | null;
-  amountOriginal: number | null;
-  dueDate: Date | null;
-  issuer: string | null;
-  issueDate: Date | null;
-  rate: number | null;
-  rateType: string | null;
-  status: InvestmentStatus;
-  transactions: InvestmentTransaction[] | null;
+  lastMonthRate: number | null
+  lastTwelveMonthsRate: number | null
+  code: string | null
+  amount: number | null
+  owner: string | null
+  amountOriginal: number | null
+  dueDate: Date | null
+  issuer: string | null
+  issueDate: Date | null
+  rate: number | null
+  rateType: string | null
+  status: InvestmentStatus | null
+  transactions: InvestmentTransaction[] | null
 }
 
 export type InvestmentTransaction = {
-  type: string;
-  quantity: number;
-  value: number;
-  amount: number;
-  date: Date;
-  tradeDate: Date | null;
-};
+  type: string
+  quantity: number
+  value: number
+  amount: number
+  date: Date
+  tradeDate: Date | null
+}
 
 /**
  *
@@ -290,12 +289,15 @@ export type Connector = {
  * @typedef Item
  * @type {object}
  * @property {number} id - primary identifier of the Item
- * @property {Connector} connector - Connector's associated with item
  * @property {string} status - Current status of the item
+ * @property {Connector} connector - Connector associated with item
  * @property {string} executionStatus - Current execution status of item.
  * @property {Date} createdAt - Date of the first connection
  * @property {Date} updatedAt - Date of the last update on the connection
  * @property {Date} lastUpdatedAt - Date of the last successful connection sync of the institution data.
+ * @property {ConnectorCredential} parameter - Data of a MFA parameter second step, as it has been requested by
+ *                                             the provider after successfully logging in, this will be
+ *                                             needed to be able to proceed with the connection.
  */
 export type Item = {
   id: string
@@ -305,11 +307,14 @@ export type Item = {
   createdAt: Date
   updatedAt: Date
   lastUpdatedAt: Date | null
-  parameter?: ConnectorCredential | null
-  error: ErrorResponse | null
+  parameter: ConnectorCredential | null
+  error: ExecutionError | null
   webhookUrl: string | null
 }
 
+/**
+ * All possible states for Execution.status
+ */
 export enum ExecutionStatus {
   CREATING = 'CREATING',
   CREATE_ERROR = 'CREATE_ERROR',
@@ -330,9 +335,24 @@ export enum ExecutionStatus {
   ERROR = 'ERROR',
 }
 
-export const FINISHED_STATUS: ExecutionStatus[] = [
-  ExecutionStatus.ERROR,
+export enum ExecutionErrorCode {
+  INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
+  INVALID_CREDENTIALS_MFA = 'INVALID_CREDENTIALS_MFA',
+  ALREADY_LOGGED_IN = 'ALREADY_LOGGED_IN',
+  SITE_NOT_AVAILABLE = 'SITE_NOT_AVAILABLE',
+  ACCOUNT_LOCKED = 'ACCOUNT_LOCKED',
+  UNEXPECTED_ERROR = 'UNEXPECTED_ERROR',
+}
+
+export enum ParameterValidationErrorCode {
+  MISSING_REQUIRED_PARAMETER = '001',
+  RULE_VALIDATION_ERROR = '002',
+  DATE_RULE_VALIDATION_ERROR = '003',
+}
+
+export const FINISHED_STATUSES: ExecutionStatus[] = [
   ExecutionStatus.SUCCESS,
+  ExecutionStatus.ERROR,
   ExecutionStatus.MERGE_ERROR,
   ExecutionStatus.INVALID_CREDENTIALS,
   ExecutionStatus.ALREADY_LOGGED_IN,
@@ -340,16 +360,43 @@ export const FINISHED_STATUS: ExecutionStatus[] = [
   ExecutionStatus.SITE_NOT_AVAILABLE,
 ]
 
-export type ErrorResponse = {
-  code: number
-  message: string
-  details?: ErrorDetail[]
-}
-
-export type ErrorDetail = {
-  code: string
+export type ParameterValidationError = {
+  code: ParameterValidationErrorCode
   message: string
   parameter: string
+}
+
+export type ExecutionError = {
+  code: ExecutionErrorCode
+  message: string
+}
+
+export enum HttpStatusCode {
+  BAD_REQUEST = 400,
+  FORBIDDEN = 403,
+  NOT_FOUND = 404,
+  INTERNAL_SERVER_ERROR = 500,
+}
+
+export type ValidationErrorResponse = {
+  code: HttpStatusCode
+  message: string
+  details?: ParameterValidationError[]
+}
+
+/**
+ * Helper type-guard to check if create or update Item response is a
+ * ValidationErrorResponse, or an actual Item.
+ * @param response
+ */
+export function isValidationErrorResponse(
+  response: Item | ValidationErrorResponse
+): response is ValidationErrorResponse {
+  return (
+    (typeof (response as ValidationErrorResponse).code === 'number' &&
+      typeof (response as ValidationErrorResponse).message === 'string') ||
+    !(typeof (response as Item).id === 'string')
+  )
 }
 
 export type PageResponse<T> = {
@@ -411,5 +458,5 @@ export type Address = {
   postalCode?: string | null
   state?: string | null
   country?: string | null
-  type?: 'Personal' | 'Work'| null
+  type?: 'Personal' | 'Work' | null
 }
