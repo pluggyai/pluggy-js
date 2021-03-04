@@ -122,21 +122,21 @@ export type InvestmentTransaction = {
 };
 
 /**
- * @typedef Account
- * @type {object}
+ *
+ * When requesting account data with a connectToken, only these fields are included in the response.
+ *
+ * @typedef AccountBase
  * @property {string} id - primary identifier of the account
  * @property {string} itemId - primary identifier of the Item
- * @property {string} name - Account's name or description
- * @property {string} marketingName - Account's name provided by the institution based on the level of client.
- * @property {string} number - Account's provider number
- * @property {number} balance - Current balance of the account
- * @property {string} owner - Account's owner´s name
- * @property {string} taxNumber - Account's owner´s tax number
- * @property {CurrencyCode} currencyCode - ISO Currency code of the investment
  * @property {AccountType} type - Type of the account
  * @property {AccountSubType} subtype - Sub type of the account
+ * @property {string} number - Account's provider number
+ * @property {number} balance - Current balance of the account
+ * @property {string} name - Account's name or description
+ *
+ *
  */
-export type Account = {
+export type AccountBase = {
   id: string
   itemId: string
   type: AccountType
@@ -144,6 +144,26 @@ export type Account = {
   number: string
   balance: number
   name: string
+}
+
+/**
+ * @typedef Account
+ * @type {object}
+ * @property {string} id - primary identifier of the account
+ * @property {string} itemId - primary identifier of the Item
+ * @property {AccountType} type - Type of the account
+ * @property {AccountSubType} subtype - Sub type of the account
+ * @property {string} number - Account's provider number
+ * @property {number} balance - Current balance of the account
+ * @property {string} name - Account's name or description
+ * @property {string} marketingName - Account's name provided by the institution based on the level of client.
+ * @property {string} owner - Account's owner´s name
+ * @property {string} taxNumber - Account's owner´s tax number
+ * @property {CurrencyCode} currencyCode - ISO Currency code of the investment
+ * @property {BankData} bankData - Account related banking data
+ * @property {CreditData} creditData - Account related credit data
+ */
+export type Account = AccountBase & {
   marketingName: string | null
   owner: string | null
   taxNumber: string | null
