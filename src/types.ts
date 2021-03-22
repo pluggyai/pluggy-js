@@ -226,6 +226,26 @@ export type Transaction = {
 }
 
 /**
+ * @typedef CredentialType
+ * credential type, used to show a proper form input to the user
+ * 'number' -> numeric only data
+ * 'text' -> alpha-numeric data
+ * 'password' -> alpha-numeric password, must be obfuscated
+ * 'select' -> credential has to be picked from values listed in credential.options field
+ */
+export type CredentialType = 'number' | 'password' | 'text' | 'select'
+
+/**
+ * @typedef CredentialSelectOption
+ * @property {string} label - the text to display to the user for this option
+ * @property {string} value - the actual value for this option
+ */
+export type CredentialSelectOption = {
+  value: string
+  label: string
+}
+
+/**
  * @typedef ConnectorCredential
  * @type {object}
  * @property {string} label - parameter label that describes it
@@ -237,6 +257,7 @@ export type Transaction = {
  * @property {string} validationMessage - Validation error message to show to the user
  * @property {boolean} optional - Useful to allow the user to skip/ignoring an unneeded parameter
  * @property {string} assistiveText - Assistive information (supplied by the connector/site) to help the user provide the extra MFA credential
+ * @property {CredentialSelectOption[]} options - Available options if credential is of type 'select'
 
  */
 export type ConnectorCredential = {
@@ -249,16 +270,8 @@ export type ConnectorCredential = {
   validationMessage?: string
   optional: boolean
   assistiveText?: string
+  options?: CredentialSelectOption[]
 }
-
-/**
- * @typedef CredentialType
- * credential type, used to show a proper form input to the user
- * 'number' -> numeric only data
- * 'text' -> alpha-numeric data
- * 'password' -> alpha-numeric password, must be obfuscated
- */
-export type CredentialType = 'number' | 'password' | 'text'
 
 /**
  * @typedef Connector
