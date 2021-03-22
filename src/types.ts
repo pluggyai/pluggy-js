@@ -440,6 +440,7 @@ export type ConnectorType = 'PERSONAL_BANK' | 'BUSINESS_BANK' | 'INVOICE' | 'INV
 
 export type IdentityResponse = {
   id: string
+  itemId: string
   birthDate?: Date
   taxNumber?: string
   document?: string
@@ -450,6 +451,8 @@ export type IdentityResponse = {
   emails?: Email[]
   addresses?: Address[]
   relations?: IdentityRelation[]
+  createdAt: Date
+  updatedAt: Date
 }
 
 export type PhoneNumber = {
