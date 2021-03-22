@@ -236,6 +236,8 @@ export type Transaction = {
  * @property {string} validation - Validation regex to check on the submitted parameter value, before execution
  * @property {string} validationMessage - Validation error message to show to the user
  * @property {boolean} optional - Useful to allow the user to skip/ignoring an unneeded parameter
+ * @property {string} assistiveText - Assistive information (supplied by the connector/site) to help the user provide the extra MFA credential
+
  */
 export type ConnectorCredential = {
   label: string
@@ -246,6 +248,7 @@ export type ConnectorCredential = {
   validation?: string
   validationMessage?: string
   optional: boolean
+  assistiveText?: string
 }
 
 /**
