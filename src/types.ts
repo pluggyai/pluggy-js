@@ -231,9 +231,10 @@ export type Transaction = {
  * 'number' -> numeric only data
  * 'text' -> alpha-numeric data
  * 'password' -> alpha-numeric password, must be obfuscated
+ * 'image' -> a QR code needs to be decoded (QR is provided in the credential.data field)
  * 'select' -> credential has to be picked from values listed in credential.options field
  */
-export type CredentialType = 'number' | 'password' | 'text' | 'select'
+export type CredentialType = 'number' | 'password' | 'text' | 'image' | 'select'
 
 /**
  * @typedef CredentialSelectOption
