@@ -132,7 +132,7 @@ export type InvestmentTransaction = {
  * @property {string} number - Account's provider number
  * @property {number} balance - Current balance of the account
  * @property {string} name - Account's name or description
- *
+ * @property {CurrencyCode} currencyCode - ISO Currency code of the investment
  *
  */
 export type AccountBase = {
@@ -143,6 +143,7 @@ export type AccountBase = {
   number: string
   balance: number
   name: string
+  currencyCode: CurrencyCode
 }
 
 /**
@@ -158,7 +159,6 @@ export type AccountBase = {
  * @property {string} marketingName - Account's name provided by the institution based on the level of client.
  * @property {string} owner - Account's owner´s name
  * @property {string} taxNumber - Account's owner´s tax number
- * @property {CurrencyCode} currencyCode - ISO Currency code of the investment
  * @property {BankData} bankData - Account related banking data
  * @property {CreditData} creditData - Account related credit data
  */
@@ -166,9 +166,8 @@ export type Account = AccountBase & {
   marketingName: string | null
   owner: string | null
   taxNumber: string | null
-  currencyCode: CurrencyCode
-  bankData?: BankData
-  creditData?: CreditData
+  bankData: BankData | null
+  creditData: CreditData | null
 }
 
 /**
