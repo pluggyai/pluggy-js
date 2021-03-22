@@ -228,12 +228,13 @@ export type Transaction = {
 /**
  * @typedef CredentialType
  * credential type, used to show a proper form input to the user
- * 'number' -> numeric only data
- * 'text' -> alpha-numeric data
- * 'password' -> alpha-numeric password, must be obfuscated
- * 'select' -> credential has to be picked from values listed in credential.options field
+ *  'number' -> numeric only data
+ *  'text' -> alpha-numeric data
+ *  'password' -> alpha-numeric password, must be obfuscated
+ *  'image' -> a QR code needs to be decoded (QR is provided in the credential.data field)
+ *  'select' -> credential has to be picked from values listed in credential.options field
  */
-export type CredentialType = 'number' | 'password' | 'text' | 'select'
+export type CredentialType = 'number' | 'password' | 'text' | 'image' | 'select'
 
 /**
  * @typedef CredentialSelectOption
@@ -252,19 +253,20 @@ export type CredentialSelectOption = {
  * @property {string} name - parameter key name
  * @property {CredentialType} type - type of parameter, used to create the form
  * @property {boolean} mfa - If parameter is used for MFA.
+ * @property {string} data - Code for QR image to be resolved (credential type 'image')
  * @property {string} placeholder - Text to use for parameter placeholder in form
  * @property {string} validation - Validation regex to check on the submitted parameter value, before execution
  * @property {string} validationMessage - Validation error message to show to the user
  * @property {boolean} optional - Useful to allow the user to skip/ignoring an unneeded parameter
  * @property {string} assistiveText - Assistive information (supplied by the connector/site) to help the user provide the extra MFA credential
  * @property {CredentialSelectOption[]} options - Available options if credential is of type 'select'
-
  */
 export type ConnectorCredential = {
   label: string
   name: string
   type?: CredentialType
   mfa?: boolean
+  data?: string
   placeholder?: string
   validation?: string
   validationMessage?: string
