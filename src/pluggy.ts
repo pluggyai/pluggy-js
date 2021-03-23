@@ -14,6 +14,7 @@ import {
   TransactionFilters,
   TransactionsPageResponse,
   ValidationErrorResponse,
+  Parameters
 } from './types'
 
 /**
@@ -66,7 +67,7 @@ class Pluggy extends BaseApi {
    */
   async createItem(
     connectorId: number,
-    parameters: Record<string, string>,
+    parameters: Parameters,
     webhookUrl?: string,
   ): Promise<Item | ValidationErrorResponse> {
     return this.createPostRequest(`items`, null, {
@@ -85,7 +86,7 @@ class Pluggy extends BaseApi {
    */
   async updateItem(
     id: string,
-    parameters?: Record<string, string>,
+    parameters?: Parameters,
     webhookUrl?: string,
   ): Promise<Item | ValidationErrorResponse> {
     return this.createPatchRequest(`items/${id}`, null, {
@@ -101,7 +102,7 @@ class Pluggy extends BaseApi {
    * @param parameters A map of name and value for the mfa requested
    * @returns {Item} a item object
    */
-  async updateItemMFA(id: string, parameters?: Record<string, string>): Promise<Item> {
+  async updateItemMFA(id: string, parameters?: Parameters): Promise<Item> {
     return this.createPostRequest(`items/${id}/mfa`, null, parameters)
   }
 
