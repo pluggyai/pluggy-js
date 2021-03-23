@@ -355,6 +355,8 @@ export enum ExecutionStatus {
   ERROR = 'ERROR',
 }
 
+export type Parameters = Record<string, string>
+
 export enum ExecutionErrorCode {
   INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
   INVALID_CREDENTIALS_MFA = 'INVALID_CREDENTIALS_MFA',
