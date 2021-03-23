@@ -302,32 +302,17 @@ export type Connector = {
   oauthUrl?: string
 }
 
-/**
- * @typedef Item
- * @type {object}
- * @property {number} id - primary identifier of the Item
- * @property {string} status - Current status of the item
- * @property {Connector} connector - Connector associated with item
- * @property {string} executionStatus - Current execution status of item.
- * @property {Date} createdAt - Date of the first connection
- * @property {Date} updatedAt - Date of the last update on the connection
- * @property {Date} lastUpdatedAt - Date of the last successful connection sync of the institution data.
- * @property {ConnectorCredential} parameter - Data of a MFA parameter second step, as it has been requested by
- *                                             the provider after successfully logging in, this will be
- *                                             needed to be able to proceed with the connection.
- */
-export type Item = {
-  id: string
-  status: ItemStatus
-  connector: Connector
-  executionStatus: ExecutionStatus
-  createdAt: Date
-  updatedAt: Date
-  lastUpdatedAt: Date | null
-  parameter: ConnectorCredential | null
-  error: ExecutionError | null
-  webhookUrl: string | null
+export enum ItemStatus {
+  CREATING = 'CREATING',
+  LOGIN_ERROR = 'LOGIN_ERROR',
+  MERGING = 'MERGING',
+  OUTDATED = 'OUTDATED',
+  UPDATED = 'UPDATED',
+  UPDATING = 'UPDATING',
+  WAITING_USER_INPUT = 'WAITING_USER_INPUT',
 }
+
+export type ConnectorType = 'PERSONAL_BANK' | 'BUSINESS_BANK' | 'INVOICE' | 'INVESTMENT'
 
 /**
  * All possible states for Execution.status
@@ -355,6 +340,19 @@ export enum ExecutionStatus {
   ERROR = 'ERROR',
 }
 
+/**
+ * List of ExecutionStatus values that are considered finished.
+ */
+export const FINISHED_STATUSES: ExecutionStatus[] = [
+  ExecutionStatus.SUCCESS,
+  ExecutionStatus.ERROR,
+  ExecutionStatus.MERGE_ERROR,
+  ExecutionStatus.INVALID_CREDENTIALS,
+  ExecutionStatus.ALREADY_LOGGED_IN,
+  ExecutionStatus.INVALID_CREDENTIALS_MFA,
+  ExecutionStatus.SITE_NOT_AVAILABLE,
+]
+
 export type Parameters = Record<string, string>
 
 export enum ExecutionErrorCode {
@@ -372,16 +370,6 @@ export enum ParameterValidationErrorCode {
   DATE_RULE_VALIDATION_ERROR = '003',
 }
 
-export const FINISHED_STATUSES: ExecutionStatus[] = [
-  ExecutionStatus.SUCCESS,
-  ExecutionStatus.ERROR,
-  ExecutionStatus.MERGE_ERROR,
-  ExecutionStatus.INVALID_CREDENTIALS,
-  ExecutionStatus.ALREADY_LOGGED_IN,
-  ExecutionStatus.INVALID_CREDENTIALS_MFA,
-  ExecutionStatus.SITE_NOT_AVAILABLE,
-]
-
 export type ParameterValidationError = {
   code: ParameterValidationErrorCode
   message: string
@@ -391,6 +379,33 @@ export type ParameterValidationError = {
 export type ExecutionError = {
   code: ExecutionErrorCode
   message: string
+}
+
+/**
+ * @typedef Item
+ * @type {object}
+ * @property {number} id - primary identifier of the Item
+ * @property {string} status - Current status of the item
+ * @property {Connector} connector - Connector associated with item
+ * @property {string} executionStatus - Current execution status of item.
+ * @property {Date} createdAt - Date of the first connection
+ * @property {Date} updatedAt - Date of the last update on the connection
+ * @property {Date} lastUpdatedAt - Date of the last successful connection sync of the institution data.
+ * @property {ConnectorCredential} parameter - Data of a MFA parameter second step, as it has been requested by
+ *                                             the provider after successfully logging in, this will be
+ *                                             needed to be able to proceed with the connection.
+ */
+export type Item = {
+  id: string
+  status: ItemStatus
+  connector: Connector
+  executionStatus: ExecutionStatus
+  createdAt: Date
+  updatedAt: Date
+  lastUpdatedAt: Date | null
+  parameter: ConnectorCredential | null
+  error: ExecutionError | null
+  webhookUrl: string | null
 }
 
 export enum HttpStatusCode {
@@ -430,18 +445,6 @@ export type TransactionsPageResponse = PageResponse<Transaction> & {
   total: number
   totalPages: number
 }
-
-export enum ItemStatus {
-  CREATING = 'CREATING',
-  LOGIN_ERROR = 'LOGIN_ERROR',
-  MERGING = 'MERGING',
-  OUTDATED = 'OUTDATED',
-  UPDATED = 'UPDATED',
-  UPDATING = 'UPDATING',
-  WAITING_USER_INPUT = 'WAITING_USER_INPUT',
-}
-
-export type ConnectorType = 'PERSONAL_BANK' | 'BUSINESS_BANK' | 'INVOICE' | 'INVESTMENT'
 
 export type IdentityResponse = {
   id: string
