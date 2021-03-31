@@ -95,20 +95,19 @@ export class BaseApi {
     if (body) {
       Object.keys(body).forEach(key => (body[key] === undefined ? delete body[key] : {}))
     }
-    return this.getServiceInstance()[method](url, body)
-      .then(async response => {
-        try {
-          const { data, status } = response
-          if (status !== 200) {
-            return Promise.reject(data)
-          } else {
-            return Promise.resolve(data)
-          }
-        } catch {
-          const { statusText } = response
-          return Promise.reject({ statusText })
+    const serviceMethod = this.getServiceInstance()[method]
+    return serviceMethod(url, body).then(async response => {
+      try {
+        const { data, status } = response
+        if (status < 200 || status >= 300) {
+          return Promise.reject(data)
         }
-      })
+        return Promise.resolve(data)
+      } catch {
+        const { statusText } = response
+        return Promise.reject({ statusText })
+      }
+    })
   }
 
   protected mapToQueryString(params: QueryParameters): string {
