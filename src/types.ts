@@ -18,26 +18,34 @@ export type TransactionFilters = {
  * @type {object}
  * @property {string} name - Connector´s name or alike name
  * @property {string[]} countries - list of countries to filter available connectors
- * @property {string[]} types - list of types to filter available connectors
+ * @property {ConnectorType[]} types - list of types to filter available connectors
  * @property {boolean} sandbox - recovers sandbox connectors. Default: false
  */
 export type ConnectorFilters = {
   name?: string
   countries?: string[]
-  types?: string[]
+  types?: ConnectorType[]
   sandbox?: boolean
 }
 
-export type CurrencyCode = 'USD' | 'ARS' | 'BRL'
-export type AccountType = 'BANK' | 'CREDIT'
-export type AccountSubType = 'SAVINGS_ACCOUNT' | 'CHECKINGS_ACCOUNT' | 'CREDIT_CARD'
-export type InvestmentType =
-  | 'MUTUAL_FUND'
-  | 'EQUITY'
-  | 'SECURITY'
-  | 'FIXED_INCOME'
-  | 'ETF'
-  | 'OTHER'
+export const CURRENCY_CODES = ['USD', 'ARS', 'BRL'] as const
+export type CurrencyCode = typeof CURRENCY_CODES[number]
+
+export const ACCOUNT_TYPES = ['BANK', 'CREDIT'] as const
+export type AccountType = typeof ACCOUNT_TYPES[number]
+
+export const ACCOUNT_SUB_TYPES = ['SAVINGS_ACCOUNT', 'CHECKINGS_ACCOUNT', 'CREDIT_CARD'] as const
+export type AccountSubType = typeof ACCOUNT_SUB_TYPES[number]
+
+export const INVESTMENT_TYPES = [
+  'MUTUAL_FUND',
+  'EQUITY',
+  'SECURITY',
+  'FIXED_INCOME',
+  'ETF',
+  'OTHER',
+] as const
+export type InvestmentType = typeof INVESTMENT_TYPES[number]
 
 /**
  * @typedef Category
@@ -54,11 +62,12 @@ export type Category = {
   parentDescription?: string
 }
 
+export const INVESTMENT_STATUSES = ['ACTIVE', 'PENDING', 'TOTAL_WITHDRAWAL'] as const
 /**
  * @typedef InvestmentStatus
  * @type {string}
  */
-export type InvestmentStatus = 'ACTIVE' | 'PENDING' | 'TOTAL_WITHDRAWAL'
+export type InvestmentStatus = typeof INVESTMENT_STATUSES[number]
 
 /**
  * @typedef Investment
@@ -225,6 +234,7 @@ export type Transaction = {
   providerCode: string | null
 }
 
+export const CREDENTIAL_TYPES = ['number', 'password', 'text', 'image', 'select'] as const
 /**
  * @typedef CredentialType
  * credential type, used to show a proper form input to the user
@@ -234,7 +244,7 @@ export type Transaction = {
  *  'image' -> a QR code needs to be decoded (QR is provided in the credential.data field)
  *  'select' -> credential has to be picked from values listed in credential.options field
  */
-export type CredentialType = 'number' | 'password' | 'text' | 'image' | 'select'
+export type CredentialType = typeof CREDENTIAL_TYPES[number]
 
 /**
  * @typedef CredentialSelectOption
@@ -312,7 +322,8 @@ export enum ItemStatus {
   WAITING_USER_INPUT = 'WAITING_USER_INPUT',
 }
 
-export type ConnectorType = 'PERSONAL_BANK' | 'BUSINESS_BANK' | 'INVOICE' | 'INVESTMENT'
+export const CONNECTOR_TYPES = ['PERSONAL_BANK', 'BUSINESS_BANK', 'INVOICE', 'INVESTMENT'] as const
+export type ConnectorType = typeof CONNECTOR_TYPES[number]
 
 /**
  * All possible states for Execution.status
