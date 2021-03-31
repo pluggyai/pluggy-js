@@ -1,3 +1,11 @@
+export const COUNTRY_CODES = ['AR', 'BR', 'CO', 'MX'] as const
+/**
+ * @typedef CountryCode
+ *  Supported and available countries, in ISO-3166-1 alpha 2 format.
+ *  Useful to filter connectors list.
+ */
+export type CountryCode = typeof COUNTRY_CODES[number]
+
 /**
  * @typedef TransactionFilters
  * @type {object}
@@ -17,13 +25,13 @@ export type TransactionFilters = {
  * @typedef ConnectorFilters
  * @type {object}
  * @property {string} name - Connector´s name or alike name
- * @property {string[]} countries - list of countries to filter available connectors
+ * @property {CountryCode[]} countries - list of countries to filter available connectors
  * @property {ConnectorType[]} types - list of types to filter available connectors
  * @property {boolean} sandbox - recovers sandbox connectors. Default: false
  */
 export type ConnectorFilters = {
   name?: string
-  countries?: string[]
+  countries?: CountryCode[]
   types?: ConnectorType[]
   sandbox?: boolean
 }
@@ -293,7 +301,7 @@ export type ConnectorCredential = {
  * @property {string} institutionUrl - Url of the institution that the connector represents
  * @property {string} imageUrl - Image url of the institution.
  * @property {string} primaryColor - Primary color of the institution
- * @property {string} country - Country of the institution
+ * @property {CountryCode} country - Country of the institution
  * @property {string} type - Type of the connector
  * @property {ConnectorCredential[]} credentials - List of parameters needed to execute the connector
  * @property {boolean} hasMfa - if true, the connection will expect an MFA token credential. If a credential is "mfa: true", it will be requested on the same step (1-step MFA), otherwise it will be requested as an extra step (2-step MFA).
@@ -306,7 +314,7 @@ export type Connector = {
   imageUrl: string
   primaryColor: string | null
   type: ConnectorType
-  country: string
+  country: CountryCode
   credentials: ConnectorCredential[]
   hasMFA: boolean
   oauthUrl?: string
