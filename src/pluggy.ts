@@ -14,7 +14,7 @@ import {
   TransactionFilters,
   TransactionsPageResponse,
   ValidationErrorResponse,
-  Parameters
+  Parameters,
 } from './types'
 
 /**
@@ -68,7 +68,7 @@ class Pluggy extends BaseApi {
   async createItem(
     connectorId: number,
     parameters: Parameters,
-    webhookUrl?: string,
+    webhookUrl?: string
   ): Promise<Item | ValidationErrorResponse> {
     return this.createPostRequest(`items`, null, {
       connectorId,
@@ -87,7 +87,7 @@ class Pluggy extends BaseApi {
   async updateItem(
     id: string,
     parameters?: Parameters,
-    webhookUrl?: string,
+    webhookUrl?: string
   ): Promise<Item | ValidationErrorResponse> {
     return this.createPatchRequest(`items/${id}`, null, {
       id,
@@ -139,7 +139,7 @@ class Pluggy extends BaseApi {
    */
   async fetchTransactions(
     accountId: string,
-    options: TransactionFilters = {},
+    options: TransactionFilters = {}
   ): Promise<TransactionsPageResponse> {
     return this.createGetRequest('transactions', { ...options, accountId })
   }
