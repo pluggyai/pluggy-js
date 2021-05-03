@@ -1,3 +1,5 @@
+import axios, { AxiosError } from 'axios'
+
 export const COUNTRY_CODES = ['AR', 'BR', 'CO', 'MX'] as const
 /**
  * @typedef CountryCode
@@ -42,7 +44,11 @@ export type CurrencyCode = typeof CURRENCY_CODES[number]
 export const ACCOUNT_TYPES = ['BANK', 'CREDIT'] as const
 export type AccountType = typeof ACCOUNT_TYPES[number]
 
-export const ACCOUNT_SUB_TYPES = ['SAVINGS_ACCOUNT', 'CHECKINGS_ACCOUNT', 'CREDIT_CARD'] as const
+export const ACCOUNT_SUB_TYPES = [
+  'SAVINGS_ACCOUNT',
+  'CHECKINGS_ACCOUNT',
+  'CREDIT_CARD',
+] as const
 export type AccountSubType = typeof ACCOUNT_SUB_TYPES[number]
 
 export const INVESTMENT_TYPES = [
@@ -70,7 +76,11 @@ export type Category = {
   parentDescription?: string
 }
 
-export const INVESTMENT_STATUSES = ['ACTIVE', 'PENDING', 'TOTAL_WITHDRAWAL'] as const
+export const INVESTMENT_STATUSES = [
+  'ACTIVE',
+  'PENDING',
+  'TOTAL_WITHDRAWAL',
+] as const
 /**
  * @typedef InvestmentStatus
  * @type {string}
@@ -242,7 +252,13 @@ export type Transaction = {
   providerCode: string | null
 }
 
-export const CREDENTIAL_TYPES = ['number', 'password', 'text', 'image', 'select'] as const
+export const CREDENTIAL_TYPES = [
+  'number',
+  'password',
+  'text',
+  'image',
+  'select',
+] as const
 /**
  * @typedef CredentialType
  * credential type, used to show a proper form input to the user
@@ -330,7 +346,12 @@ export enum ItemStatus {
   WAITING_USER_INPUT = 'WAITING_USER_INPUT',
 }
 
-export const CONNECTOR_TYPES = ['PERSONAL_BANK', 'BUSINESS_BANK', 'INVOICE', 'INVESTMENT'] as const
+export const CONNECTOR_TYPES = [
+  'PERSONAL_BANK',
+  'BUSINESS_BANK',
+  'INVOICE',
+  'INVESTMENT',
+] as const
 export type ConnectorType = typeof CONNECTOR_TYPES[number]
 
 /**
@@ -434,25 +455,203 @@ export enum HttpStatusCode {
   INTERNAL_SERVER_ERROR = 500,
 }
 
-export type ValidationErrorResponse = {
+/**
+ * General Pluggy API error response
+ */
+export type ErrorResponse = {
   code: HttpStatusCode
   message: string
+}
+
+/**
+ * Representation of a Client-side error, such as a network connectivity issue
+ */
+export type NoServerResponseError = {
+  code: '0'
+  message: string
+}
+
+/**
+ * 400 Bad Request error, usually due to
+ * invalid or missing query/body parameters on a request.
+ *
+ * If the API can determine a related connector parameter error, it will be included
+ * in the 'details' field.
+ */
+export type ValidationErrorResponse = ErrorResponse & {
+  code: HttpStatusCode.BAD_REQUEST
   details?: ParameterValidationError[]
 }
 
 /**
- * Helper type-guard to check if create or update Item response is a
- * ValidationErrorResponse, or an actual Item.
- * @param response
+ * 400 Bad Request error, due to invalid or missing connector parameters
+ * on an Item create/update request.
+ *
+ * The 'details' array includes all affected parameters that failed with a more specific message.
+ */
+export type ConnectorValidationErrorResponse = ErrorResponse & {
+  code: HttpStatusCode.BAD_REQUEST
+  details: ParameterValidationError[]
+}
+
+/**
+ * Helper type-guard to to narrow an Error to an AxiosError containing ConnectorValidationErrorResponse.
+ * This error response can happen on a Bad Request on 'POST /items' and 'PATCH /items' requests.
+ * @param error
+ */
+export function isConnectorValidationErrorResponse(
+  error: Error
+): error is AxiosError<ConnectorValidationErrorResponse> {
+  if (!axios.isAxiosError(error)) {
+    return false
+  }
+  const { response } = error
+  if (!response) {
+    return false
+  }
+  const {
+    data: { code, message, details },
+  } = response as {
+    data: { code: unknown; message: unknown; details: unknown }
+  }
+
+  return (
+    code === HttpStatusCode.BAD_REQUEST &&
+    typeof message === 'string' &&
+    Array.isArray(details)
+  )
+}
+
+/**
+ * Helper guard to narrow an Error to an AxiosError containing a
+ * Pluggy API ValidationErrorResponse object (which represents a 400 Bad Request).
+ *
+ * This error response can happen on a bad request on any resource, for example when some
+ * required parameters are missing or have an invalid format or value.
+ *
+ * @param error
  */
 export function isValidationErrorResponse(
-  response: Item | ValidationErrorResponse
-): response is ValidationErrorResponse {
-  return (
-    (typeof (response as ValidationErrorResponse).code === 'number' &&
-      typeof (response as ValidationErrorResponse).message === 'string') ||
-    !(typeof (response as Item).id === 'string')
-  )
+  error: Error
+): error is AxiosError<ValidationErrorResponse> {
+  if (!axios.isAxiosError(error)) {
+    return false
+  }
+  const { response } = error
+  if (!response) {
+    return false
+  }
+  const {
+    data: { code, message },
+  } = response as {
+    data: { code: unknown; message: unknown }
+  }
+
+  return code === HttpStatusCode.BAD_REQUEST && typeof message === 'string'
+}
+
+/**
+ * Helper guard to narrow an Error to an AxiosError containing a Pluggy API ErrorResponse object.
+ * @param error
+ */
+export function isPluggyServerError(
+  error: Error
+): error is AxiosError<ErrorResponse> {
+  if (!axios.isAxiosError(error)) {
+    return false
+  }
+  const { response, code } = error
+  if (!response) {
+    return false
+  }
+  if (Number(code) >= 200 && Number(code) < 300) {
+    // Response code is OK -> not an error
+    return false
+  }
+  return true
+}
+
+/**
+ * Helper to extract the ErrorResponse data object
+ * from the AxiosError<ErrorResponse> error
+ */
+export function getErrorResponse<ErrorResponse>(
+  error: AxiosError<ErrorResponse>
+): ErrorResponse {
+  if (!error.response) {
+    throw new Error(
+      `Response is undefined in AxiosError object, can't extract data`
+    )
+  }
+  return error.response.data
+}
+
+/**
+ * Helper guard to narrow an Error to an AxiosError that is related to the client, not to the server.
+ * @param error
+ */
+export function isClientError(error: Error): error is AxiosError<unknown> {
+  if (!axios.isAxiosError(error)) {
+    return false
+  }
+
+  const { request, response } = error
+
+  if (request === undefined && response === undefined) {
+    // Something happened in setting up the request that triggered an Error
+    return true
+  }
+
+  if (response === undefined) {
+    // The request was made but no response was received
+    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    // http.ClientRequest in node.js
+    return true
+  }
+
+  return false
+}
+
+/**
+ * Helper to create a NoServerResponseError object
+ * from an error that is an AxiosError related to the client itself.
+ */
+export function parseClientError(
+  error: AxiosError<unknown>
+): NoServerResponseError {
+  if (!axios.isAxiosError(error)) {
+    throw new Error('Error is not an AxiosError instance')
+  }
+
+  if (!isClientError(error)) {
+    throw new Error('AxiosError is a server response error, not a client error')
+  }
+
+  const { request, response, message } = error
+
+  if (request === undefined && response === undefined) {
+    // Something happened in setting up the request that triggered an Error
+    return {
+      code: '0',
+      message: `Malformed request error: '${message}'`,
+    }
+  }
+
+  if (response === undefined) {
+    // The request was made but no response was received
+    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    // http.ClientRequest in node.js
+    console.log('Request was made but no response was received', request)
+    return {
+      code: '0',
+      message: `Request was made but no response from server was received`,
+    }
+  }
+  // other - this should not happen (should already have covered all previous scenarios)
+  return {
+    code: '0',
+    message: `Unexpected AxiosError client error`,
+  }
 }
 
 export type PageResponse<T> = {

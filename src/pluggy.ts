@@ -13,7 +13,6 @@ import {
   Transaction,
   TransactionFilters,
   TransactionsPageResponse,
-  ValidationErrorResponse,
   Parameters,
 } from './types'
 
@@ -64,12 +63,13 @@ class Pluggy extends BaseApi {
    * @param parameters A map of name and value for the needed credentials
    * @param webhookUrl - The webhookUrl to send item notifications to (optional)
    * @returns {Item} a item object
+   * @throws {AxiosError<ValidationErrorResponse> axios-wrapped Error with validation error details
    */
   async createItem(
     connectorId: number,
     parameters: Parameters,
     webhookUrl?: string
-  ): Promise<Item | ValidationErrorResponse> {
+  ): Promise<Item> {
     return this.createPostRequest(`items`, null, {
       connectorId,
       parameters,
@@ -83,12 +83,13 @@ class Pluggy extends BaseApi {
    * @param parameters A map of name and value for the credentials to be updated
    * @param webhookUrl - The new webhookUrl to send item notifications to (optional)
    * @returns {Item} a item object
+   * @throws {AxiosError<ValidationErrorResponse> axios-wrapped Error with validation error details
    */
   async updateItem(
     id: string,
     parameters?: Parameters,
     webhookUrl?: string
-  ): Promise<Item | ValidationErrorResponse> {
+  ): Promise<Item> {
     return this.createPatchRequest(`items/${id}`, null, {
       id,
       parameters,
