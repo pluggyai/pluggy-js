@@ -27,7 +27,7 @@
     "browser"
   ],
   "dependencies": {
-    "axios": "^0.20.0"
+    "axios": "^0.21.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.16.0",
