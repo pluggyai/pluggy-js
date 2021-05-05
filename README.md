@@ -19,7 +19,7 @@ yarn add -S react-pluggy-connect
 Import directly as an HTML `<script>`:
 
 ```html
-<script src="https://cdn.pluggy.ai/pluggy-js/v0.2.2/pluggy.js"></script>
+<script src="https://cdn.pluggy.ai/pluggy-js/v0.2.3/pluggy.js"></script>
 ```
 Additionally, you can always refer to the latest release by referencing the URL like so:
 ```html
