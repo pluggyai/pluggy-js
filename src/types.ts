@@ -292,7 +292,8 @@ export type CredentialSelectOption = {
  * @property {string} validation - Validation regex to check on the submitted parameter value, before execution
  * @property {string} validationMessage - Validation error message to show to the user
  * @property {boolean} optional - Useful to allow the user to skip/ignoring an unneeded parameter
- * @property {string} assistiveText - Assistive information (supplied by the connector/site) to help the user provide the extra MFA credential
+ * @property {string} instructions - Applies to MFA credential only - Detailed information that include details/hints that the user should be aware of
+ * @property {string} assistiveText - Short text (either supplied by the connector or the institution itself) to help the user provide the credential
  * @property {CredentialSelectOption[]} options - Available options if credential is of type 'select'
  */
 export type ConnectorCredential = {
@@ -306,6 +307,7 @@ export type ConnectorCredential = {
   validationMessage?: string
   optional: boolean
   assistiveText?: string
+  instructions?: string
   options?: CredentialSelectOption[]
 }
 
