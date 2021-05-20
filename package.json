@@ -9,9 +9,9 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc && rollup -c",
-    "prepare": "npm run build",
-    "release": "npm i && npm run build && npm publish",
-    "release:next": "npm i && npm run build && npm publish --tag next",
+    "prerelease": "npm i && npm run build && npm run lint",
+    "release": "npm publish",
+    "release:next": "npm run release -- --tag next",
     "prettier-fix": "prettier --write \"src/**/*.ts\"",
     "lint": "npm run prettier-fix && eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix"
