@@ -295,6 +295,7 @@ export type CredentialSelectOption = {
  * @property {string} instructions - Applies to MFA credential only - Detailed information that include details/hints that the user should be aware of
  * @property {string} assistiveText - Short text (either supplied by the connector or the institution itself) to help the user provide the credential
  * @property {CredentialSelectOption[]} options - Available options if credential is of type 'select'
+ * @property expiresAt {Date} - Applies to MFA credential only. After this date the MFA parameter will expire and won't be accepted, must generate a new MFA request.
  */
 export type ConnectorCredential = {
   label: string
@@ -309,6 +310,7 @@ export type ConnectorCredential = {
   assistiveText?: string
   instructions?: string
   options?: CredentialSelectOption[]
+  expiresAt?: Date
 }
 
 /**
