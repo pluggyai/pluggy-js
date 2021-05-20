@@ -1,6 +1,8 @@
 import axios, { AxiosInstance } from 'axios'
 
-type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
+type QueryParameters = {
+  [key: string]: number | number[] | string | string[] | boolean
+}
 
 export class BaseApi {
   private service: AxiosInstance
@@ -28,7 +30,10 @@ export class BaseApi {
     return this.service
   }
 
-  protected async createGetRequest<T>(endpoint: string, params?: QueryParameters): Promise<T> {
+  protected async createGetRequest<T>(
+    endpoint: string,
+    params?: QueryParameters
+  ): Promise<T> {
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
 
     return this.getServiceInstance()
@@ -55,7 +60,7 @@ export class BaseApi {
   protected createPostRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: any
+    body?: Record<string, unknown>
   ): Promise<T> {
     return this.createMutationRequest('post', endpoint, params, body)
   }
@@ -63,7 +68,7 @@ export class BaseApi {
   protected createPutRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: any
+    body?: Record<string, unknown>
   ): Promise<T> {
     return this.createMutationRequest('put', endpoint, params, body)
   }
@@ -71,7 +76,7 @@ export class BaseApi {
   protected createPatchRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: any
+    body?: Record<string, unknown>
   ): Promise<T> {
     return this.createMutationRequest('patch', endpoint, params, body)
   }
@@ -79,7 +84,7 @@ export class BaseApi {
   protected createDeleteRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: any
+    body?: Record<string, unknown>
   ): Promise<T> {
     return this.createMutationRequest('delete', endpoint, params, body)
   }
@@ -88,12 +93,14 @@ export class BaseApi {
     method: string,
     endpoint: string,
     params?: QueryParameters,
-    body?: any
+    body?: Record<string, unknown>
   ): Promise<T> {
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
 
     if (body) {
-      Object.keys(body).forEach(key => (body[key] === undefined ? delete body[key] : {}))
+      Object.keys(body).forEach(key =>
+        body[key] === undefined ? delete body[key] : {}
+      )
     }
     const serviceMethod = this.getServiceInstance()[method]
     return serviceMethod(url, body).then(async response => {
