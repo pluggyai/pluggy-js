@@ -21,7 +21,7 @@
   "repository": "https://github.com/pluggyai/pluggy-sdk-node",
   "dependencies": {
     "dotenv": "^10.0.0",
-    "pluggy-js": "^0.2.5"
+    "pluggy-js": "^0.2.6"
   },
   "devDependencies": {
     "@types/node": "^15.6.1",
