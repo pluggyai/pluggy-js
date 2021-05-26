@@ -1,0 +1,8 @@
+# Compiled source
+dist
+
+# env file
+.env
+
+# Dependencies
+node_modules
