@@ -1,7 +1,16 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { isIsoDateString, parseIsoDate } from './utils'
 
 type QueryParameters = {
   [key: string]: number | number[] | string | string[] | boolean
+}
+
+/**
+ * Helper function for JSON.parse(),
+ * to parse ISO date string values to Date objects.
+ */
+function jsonParseDateReviver(_key, value: unknown): Date | unknown {
+  return isIsoDateString(value) ? parseIsoDate(value) : value
 }
 
 export class BaseApi {
@@ -19,10 +28,14 @@ export class BaseApi {
 
   getServiceInstance(): AxiosInstance {
     if (!this.service) {
-      const config = {
+      const config: AxiosRequestConfig = {
         headers: {
           'X-API-KEY': this.apiKey,
           'Content-Type': 'application/json',
+        },
+        transformResponse: data => {
+          // transform ISO string dates to Date
+          return JSON.parse(data, jsonParseDateReviver)
         },
       }
       this.service = axios.create(config)
