@@ -7,13 +7,12 @@ const DEFAULT_MFA_VALUE = '123456'
 
 dotenv.config()
 
-const { PLUGGY_API_KEY: pluggyApiKey, PLUGGY_API_URL } = process.env
-const baseUrl = PLUGGY_API_URL || undefined
-const baseClient = new Pluggy(pluggyApiKey, baseUrl)
+const { PLUGGY_API_KEY: pluggyApiKey } = process.env
+const baseClient = new Pluggy(pluggyApiKey)
 
 void (async function(): Promise<void> {
   const { accessToken: connectToken } = await baseClient.createConnectToken()
-  const client = new Pluggy(connectToken, baseUrl)
+  const client = new Pluggy(connectToken)
 
   // Create a connection
   let item = await client.createItem(PLUGGY_BANK_CONNECTOR, {

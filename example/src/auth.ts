@@ -2,10 +2,11 @@ import dotenv from 'dotenv'
 import Pluggy from 'pluggy-js'
 
 dotenv.config()
-const { PLUGGY_API_KEY, PLUGGY_API_URL } = process.env
+
+const { PLUGGY_API_KEY: pluggyApiKey } = process.env
+const client = new Pluggy(pluggyApiKey)
 
 void (async function(): Promise<void> {
-  const client = new Pluggy(PLUGGY_API_KEY, PLUGGY_API_URL || undefined)
 
   try {
     await client.fetchConnectors()
