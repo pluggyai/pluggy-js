@@ -15,7 +15,6 @@
     "start": "ts-node src/index.ts",
     "example:auth": "ts-node src/auth.ts",
     "example:mfa": "ts-node src/mfa.ts",
-    "example:investments": "ts-node src/investments.ts",
     "example:creditcards": "ts-node src/creditCards.ts",
     "example:connecttoken": "ts-node src/connectToken.ts"
   },
