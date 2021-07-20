@@ -339,7 +339,7 @@ export type Connector = {
   hasMFA: boolean
   oauthUrl?: string
   health: {
-    status: 'ONLINE' | 'OFFLINE'
+    status: 'ONLINE' | 'OFFLINE' | 'UNSTABLE'
     stage: 'BETA' | null
   }
 }
