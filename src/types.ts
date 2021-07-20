@@ -338,6 +338,10 @@ export type Connector = {
   credentials: ConnectorCredential[]
   hasMFA: boolean
   oauthUrl?: string
+  health: {
+    status: 'ONLINE' | 'OFFLINE'
+    stage: 'BETA' | null
+  }
 }
 
 export enum ItemStatus {
