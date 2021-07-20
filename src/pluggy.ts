@@ -30,9 +30,10 @@ class Pluggy extends BaseApi {
    * @throws {AxiosError<ErrorResponse>} status 403 if user is unauthorized
    */
   async fetchConnectors(
-    options: ConnectorFilters = {}
+    options: ConnectorFilters = {},
+    includeHealth: boolean = false
   ): Promise<PageResponse<Connector>> {
-    return this.createGetRequest('connectors', { ...options })
+    return this.createGetRequest('connectors', { ...options, includeHealth })
   }
 
   /**
@@ -43,8 +44,8 @@ class Pluggy extends BaseApi {
    * @throws {AxiosError<ErrorResponse>} status 404 If specified Connector by 'id' does not exist or is not accessible by the user,
    *                                     status 403 if user is unauthorized
    */
-  async fetchConnector(id: number): Promise<Connector> {
-    return this.createGetRequest(`connectors/${id}`)
+  async fetchConnector(id: number, includeHealth: boolean = false): Promise<Connector> {
+    return this.createGetRequest(`connectors/${id}`, { includeHealth })
   }
 
   /**
