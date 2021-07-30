@@ -25,26 +25,34 @@ import {
 class Pluggy extends BaseApi {
   /**
    * Fetch all available connectors
+   * @param connectorSearchFilters {ConnectorFilters} - GET /connectors search filtering options
+   * @param includeHealth {boolean} - if 'true', connectors response will include 'health' field.
+   *
    * @returns {Connector[]} an array of connectors
    *
    * @throws {AxiosError<ErrorResponse>} status 403 if user is unauthorized
    */
   async fetchConnectors(
-    options: ConnectorFilters = {},
-    includeHealth: boolean = false
+    connectorSearchFilters: ConnectorFilters = {},
+    includeHealth = false
   ): Promise<PageResponse<Connector>> {
-    return this.createGetRequest('connectors', { ...options, includeHealth })
+    return this.createGetRequest('connectors', {
+      ...connectorSearchFilters,
+      includeHealth,
+    })
   }
 
   /**
    * Fetch a single Connector
    * @param id The Connector ID
+   * @param includeHealth {boolean} - if 'true', connectors response will include 'health' field.
+   *
    * @returns {Connector} a connector object
    *
    * @throws {AxiosError<ErrorResponse>} status 404 If specified Connector by 'id' does not exist or is not accessible by the user,
    *                                     status 403 if user is unauthorized
    */
-  async fetchConnector(id: number, includeHealth: boolean = false): Promise<Connector> {
+  async fetchConnector(id: number, includeHealth = false): Promise<Connector> {
     return this.createGetRequest(`connectors/${id}`, { includeHealth })
   }
 
