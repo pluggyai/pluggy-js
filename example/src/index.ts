@@ -7,17 +7,23 @@ dotenv.config()
 const { PLUGGY_API_KEY: pluggyApiKey } = process.env
 const baseClient = new Pluggy(pluggyApiKey)
 
-void (async function(): Promise<void> {
+void (async function (): Promise<void> {
   const { accessToken: connectToken } = await baseClient.createConnectToken()
   const client = new Pluggy(connectToken)
 
   // Review connectors endpoint
-  const response = await client.fetchConnectors({
-    sandbox: true,
-  })
+  const response = await client.fetchConnectors(
+    {
+      sandbox: true,
+    },
+    true
+  )
   console.log('We support the following connectors: ')
-  response.results.forEach(connector => {
-    console.log(`(# ${connector.id} ) - ${connector.name}`)
+  response.results.forEach((connector) => {
+    console.log(
+      `(# ${connector.id} ) - ${connector.name}`,
+      connector.health.stage === null ? '' : connector.health.stage
+    )
   })
 
   // View credentials
@@ -34,8 +40,9 @@ void (async function(): Promise<void> {
   const start = Date.now()
   while (!['LOGIN_ERROR', 'OUTDATED', 'UPDATED'].includes(item.status)) {
     console.log(
-      `Item ${item.id} is syncing with the institution (check #${checks++}, elapsed: ${Date.now() -
-        start}ms)...`
+      `Item ${item.id} is syncing with the institution (check #${checks++}, elapsed: ${
+        Date.now() - start
+      }ms)...`
     )
     await sleep(3000)
     item = await client.fetchItem(item.id)
@@ -57,7 +64,7 @@ void (async function(): Promise<void> {
       `Account # ${account.id} has a balance of ${account.balance}, its number is ${account.number}`
     )
     const transactions = await client.fetchTransactions(account.id)
-    transactions.results.forEach(tx => {
+    transactions.results.forEach((tx) => {
       console.log(
         `Transaction # ${tx.id} made at ${tx.date}, description: ${tx.description}, amount: ${tx.amount}`
       )
