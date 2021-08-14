@@ -313,6 +313,16 @@ export type ConnectorCredential = {
   expiresAt?: Date
 }
 
+export const PRODUCT_TYPES = [
+  'ACCOUNTS',
+  'CREDIT_CARDS',
+  'TRANSACTIONS',
+  'INVESTMENTS',
+  'IDENTITY',
+] as const
+
+export type ProductType = typeof PRODUCT_TYPES[number]
+
 /**
  * @typedef Connector
  * @type {object}
@@ -338,7 +348,8 @@ export type Connector = {
   credentials: ConnectorCredential[]
   hasMFA: boolean
   oauthUrl?: string
-  health: {
+  products: ProductType[]
+  health?: {
     status: 'ONLINE' | 'OFFLINE' | 'UNSTABLE'
     stage: 'BETA' | null
   }
