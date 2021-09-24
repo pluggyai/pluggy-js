@@ -122,7 +122,6 @@ export type Investment = {
   taxes2: number | null
   amountProfit: number | null
   amountWithdrawal: number | null
-
   lastMonthRate: number | null
   lastTwelveMonthsRate: number | null
   code: string | null
@@ -317,6 +316,7 @@ export const PRODUCT_TYPES = [
   'ACCOUNTS',
   'CREDIT_CARDS',
   'TRANSACTIONS',
+  'PAYMENT_DATA',
   'INVESTMENTS',
   'IDENTITY',
 ] as const
@@ -393,6 +393,7 @@ export enum ExecutionStatus {
   ACCOUNTS_IN_PROGRESS = 'ACCOUNTS_IN_PROGRESS',
   CREDITCARDS_IN_PROGRESS = 'CREDITCARDS_IN_PROGRESS',
   TRANSACTIONS_IN_PROGRESS = 'TRANSACTIONS_IN_PROGRESS',
+  PAYMENT_DATA_IN_PROGRESS = 'PAYMENT_DATA_IN_PROGRESS',
   INVESTMENTS_IN_PROGRESS = 'INVESTMENTS_IN_PROGRESS',
   IDENTITY_IN_PROGRESS = 'IDENTITY_IN_PROGRESS',
   MERGING = 'MERGING',
