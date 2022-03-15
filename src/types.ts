@@ -399,6 +399,7 @@ export enum ExecutionStatus {
   MERGING = 'MERGING',
   MERGE_ERROR = 'MERGE_ERROR',
   SUCCESS = 'SUCCESS',
+  PARTIAL_SUCCESS = 'PARTIAL_SUCCESS',
   ERROR = 'ERROR',
 }
 
