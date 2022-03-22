@@ -450,6 +450,8 @@ export type ParameterValidationError = {
 export type ExecutionError = {
   code: ExecutionErrorCode
   message: string
+  /*! Some error cases might include extra metadata */
+  metadata?: Record<string, unknown>
 }
 
 /**
