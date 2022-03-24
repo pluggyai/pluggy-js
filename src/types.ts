@@ -451,7 +451,9 @@ export type ExecutionError = {
   code: ExecutionErrorCode
   message: string
   /*! Some error cases might include extra metadata */
-  metadata?: Record<string, unknown>
+  internalMessage?: string
+  providerMessage?: string
+  attributes?: Record<string, string>
 }
 
 /**
