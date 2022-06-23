@@ -1,6 +1,6 @@
 # pluggy.js
 
-Client Side JavaScript toolkit for Pluggy's API.
+Client-side JavaScript toolkit for Pluggy's API.
 
 ## Install
 
@@ -8,12 +8,6 @@ From npm:
 
 ```sh
 npm install pluggy-js --save
-```
-
-Using `yarn`
-
-```sh
-yarn add -S react-pluggy-connect
 ```
 
 Import directly as an HTML `<script>`:
@@ -28,4 +22,4 @@ Additionally, you can always refer to the latest release by referencing the URL 
 
 
 ## Documentation
-For most up-to-date and accurate documentation, please see our [API Reference](https://docs.pluggy.ai) page.
+For tmost up-to-date and accurate documentation, please see our [API Reference](https://docs.pluggy.ai) page.
