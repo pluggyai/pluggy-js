@@ -698,6 +698,9 @@ export function parseClientError(
 
 export type PageResponse<T> = {
   results: T[]
+  page: number
+  total: number
+  totalPages: number
 }
 
 export type TransactionsPageResponse = PageResponse<Transaction> & {
