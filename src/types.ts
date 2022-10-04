@@ -696,11 +696,11 @@ export function parseClientError(
   }
 }
 
-export type PageResponse<T> = {
+export type ListResponse<T> = {
   results: T[]
 }
 
-export type TransactionsPageResponse = PageResponse<Transaction> & {
+export type PageResponse<T> = ListResponse<T> & {
   page: number
   total: number
   totalPages: number

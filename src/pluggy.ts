@@ -12,8 +12,8 @@ import {
   PageResponse,
   Transaction,
   TransactionFilters,
-  TransactionsPageResponse,
   Parameters,
+  ListResponse,
 } from './types'
 
 /**
@@ -28,14 +28,14 @@ class Pluggy extends BaseApi {
    * @param connectorSearchFilters {ConnectorFilters} - GET /connectors search filtering options
    * @param includeHealth {boolean} - if 'true', connectors response will include 'health' field.
    *
-   * @returns {Connector[]} an array of connectors
+   * @returns {ListResponse<Connector>} a list response of connectors
    *
    * @throws {AxiosError<ErrorResponse>} status 403 if user is unauthorized
    */
   async fetchConnectors(
     connectorSearchFilters: ConnectorFilters = {},
     includeHealth = false
-  ): Promise<PageResponse<Connector>> {
+  ): Promise<ListResponse<Connector>> {
     return this.createGetRequest('connectors', {
       ...connectorSearchFilters,
       includeHealth,
@@ -58,11 +58,11 @@ class Pluggy extends BaseApi {
 
   /**
    * Fetch all items from the client
-   * @returns {Item[]} list of connected items
+   * @returns {ListResponse<Item>} a list response of connected items
    *
    * @throws {AxiosError<ErrorResponse>} status 403 if user is unauthorized
    */
-  async fetchItems(): Promise<PageResponse<Item>> {
+  async fetchItems(): Promise<ListResponse<Item>> {
     return this.createGetRequest(`items`)
   }
 
@@ -155,14 +155,14 @@ class Pluggy extends BaseApi {
    * Fetch accounts from an Item
    * @param itemId The Item id
    * @param type - AccountType filter (optional)
-   * @returns {Account[]} an array of accounts
+   * @returns {ListResponse<Account>} a list response of accounts
    *
    * @throws {AxiosError<ErrorResponse>} status 403 if user is unauthorized
    */
   async fetchAccounts(
     itemId: string,
     type?: AccountType
-  ): Promise<PageResponse<Account>> {
+  ): Promise<ListResponse<Account>> {
     return this.createGetRequest('accounts', { itemId, type })
   }
 
@@ -181,14 +181,14 @@ class Pluggy extends BaseApi {
    * Fetch transactions from an account
    * @param accountId The account id
    * @param {TransactionFilters} options Transaction options to filter
-   * @returns {Transaction[]} an array of transactions
+   * @returns {PageResponse<Transaction>} object which contains the transactions list and related paging data
    *
    * @throws {AxiosError<ErrorResponse>} status 403 if user is unauthorized
    */
   async fetchTransactions(
     accountId: string,
     options: TransactionFilters = {}
-  ): Promise<TransactionsPageResponse> {
+  ): Promise<PageResponse<Transaction>> {
     return this.createGetRequest('transactions', { ...options, accountId })
   }
 
@@ -207,14 +207,14 @@ class Pluggy extends BaseApi {
    * Fetch investments from an Item
    * @param itemId The Item id
    * @param type - InvestmentType filter (optional)
-   * @returns {Investment[]} an array of investments
+   * @returns {ListResponse<Investment>} a list response of investments
    *
    * @throws {AxiosError<ErrorResponse>} status 403 if user is unauthorized
    */
   async fetchInvestments(
     itemId: string,
     type?: InvestmentType
-  ): Promise<PageResponse<Investment>> {
+  ): Promise<ListResponse<Investment>> {
     return this.createGetRequest('investments', { itemId, type })
   }
 
@@ -252,12 +252,12 @@ class Pluggy extends BaseApi {
 
   /**
    * Fetch all available categories
-   * @returns {PageResponse<Category>[]} an paging response of categories
+   * @returns {ListResponse<Category>[]} an list response of categories
    *
    * @throws {AxiosError<ErrorResponse>} status 404 If identity does not exist or is not accessible by the user,
    *                                     status 403 if user is unauthorized
    */
-  async fetchCategories(): Promise<PageResponse<Category>> {
+  async fetchCategories(): Promise<ListResponse<Category>> {
     return this.createGetRequest('categories')
   }
 
