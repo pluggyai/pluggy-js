@@ -181,7 +181,7 @@ class Pluggy extends BaseApi {
    * Fetch transactions from an account
    * @param accountId The account id
    * @param {TransactionFilters} options Transaction options to filter
-   * @returns {PageResponse<Transaction>} an paging response of transactions
+   * @returns {PageResponse<Transaction>} object which contains the transactions list and related paging data
    *
    * @throws {AxiosError<ErrorResponse>} status 403 if user is unauthorized
    */
