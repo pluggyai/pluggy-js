@@ -32,8 +32,8 @@ export class BaseApi {
     if (!this.service) {
       const config: AxiosRequestConfig = {
         headers: {
-          // note: we should update manually the version of the user agent since we are client-side
-          // and we don't have access to the package
+          // note: we should update manually the version of Pluggy-js in the User-Agent since we are in client-side
+          // so we don't have access to the package-json versions.
           'User-Agent': `Pluggy-js/${PLUGGY_JS_VERSION}`,
           'X-API-KEY': this.apiKey,
           'Content-Type': 'application/json',
