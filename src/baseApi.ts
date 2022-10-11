@@ -14,6 +14,7 @@ function jsonParseDateReviver(_key, value: unknown): Date | unknown {
 }
 
 const PLUGGY_JS_VERSION = '0.8.0'
+const AXIOS_VERSION = '^0.21.1'
 
 export class BaseApi {
   private service: AxiosInstance
@@ -34,7 +35,7 @@ export class BaseApi {
         headers: {
           // note: we should update manually the version of Pluggy-js in the User-Agent since we are in client-side
           // so we don't have access to the package-json versions.
-          'User-Agent': `Pluggy-js/${PLUGGY_JS_VERSION}`,
+          'User-Agent': `Pluggy-js/${PLUGGY_JS_VERSION} Axios/${AXIOS_VERSION}`,
           'X-API-KEY': this.apiKey,
           'Content-Type': 'application/json',
         },
