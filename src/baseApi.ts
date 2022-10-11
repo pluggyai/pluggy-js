@@ -13,6 +13,9 @@ function jsonParseDateReviver(_key, value: unknown): Date | unknown {
   return isIsoDateString(value) ? parseIsoDate(value) : value
 }
 
+const PLUGGY_JS_VERSION = '0.7.2'
+const AXIOS_VERSION = '^0.21.1'
+
 export class BaseApi {
   private service: AxiosInstance
   private apiKey: string
@@ -30,6 +33,9 @@ export class BaseApi {
     if (!this.service) {
       const config: AxiosRequestConfig = {
         headers: {
+          // note: we should update manually the version of Pluggy-js in the User-Agent since we are in client-side
+          // so we don't have access to the package-json versions.
+          'User-Agent': `Pluggy-js/${PLUGGY_JS_VERSION} Axios/${AXIOS_VERSION}`,
           'X-API-KEY': this.apiKey,
           'Content-Type': 'application/json',
         },
