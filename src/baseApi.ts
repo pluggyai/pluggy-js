@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { isIsoDateString, parseIsoDate } from './utils'
+import { AXIOS_VERSION, PLUGGY_JS_VERSION } from './version'
 
 type QueryParameters = {
   [key: string]: number | number[] | string | string[] | boolean
@@ -12,9 +13,6 @@ type QueryParameters = {
 function jsonParseDateReviver(_key, value: unknown): Date | unknown {
   return isIsoDateString(value) ? parseIsoDate(value) : value
 }
-
-const PLUGGY_JS_VERSION = '0.8.0'
-const AXIOS_VERSION = '^0.21.1'
 
 export class BaseApi {
   private service: AxiosInstance
@@ -33,9 +31,7 @@ export class BaseApi {
     if (!this.service) {
       const config: AxiosRequestConfig = {
         headers: {
-          // note: we should update manually the version of Pluggy-js in the User-Agent since we are in client-side
-          // so we don't have access to the package-json versions.
-          'User-Agent': `Pluggy-js/${PLUGGY_JS_VERSION} Axios/${AXIOS_VERSION}`,
+          'Pluggy-User-Agent': `PluggyJs/${PLUGGY_JS_VERSION} Axios/${AXIOS_VERSION}`,
           'X-API-KEY': this.apiKey,
           'Content-Type': 'application/json',
         },
