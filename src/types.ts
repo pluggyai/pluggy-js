@@ -337,6 +337,7 @@ export type ProductType = typeof PRODUCT_TYPES[number]
  * @property {ConnectorCredential[]} credentials - List of parameters needed to execute the connector
  * @property {boolean} hasMfa - if true, the connection will expect an MFA token credential. If a credential is "mfa: true", it will be requested on the same step (1-step MFA), otherwise it will be requested as an extra step (2-step MFA).
  * @property {string} oauthUrl - (only for OAuth connector) this URL is used to connect the user and on success it will redirect to create the new item
+ * @property {Date} createdAt - date of the creation of the connector
  */
 export type Connector = {
   id: number
@@ -354,6 +355,7 @@ export type Connector = {
     status: 'ONLINE' | 'OFFLINE' | 'UNSTABLE'
     stage: 'BETA' | null
   }
+  createdAt: Date
 }
 
 export enum ItemStatus {

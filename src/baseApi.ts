@@ -13,7 +13,7 @@ function jsonParseDateReviver(_key, value: unknown): Date | unknown {
   return isIsoDateString(value) ? parseIsoDate(value) : value
 }
 
-const PLUGGY_JS_VERSION = '0.7.2'
+const PLUGGY_JS_VERSION = '0.8.0'
 const AXIOS_VERSION = '^0.21.1'
 
 export class BaseApi {
