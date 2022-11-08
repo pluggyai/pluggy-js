@@ -14,6 +14,7 @@ import {
   TransactionFilters,
   Parameters,
   ListResponse,
+  ConnectTokenOptions,
 } from './types'
 
 /**
@@ -274,13 +275,15 @@ class Pluggy extends BaseApi {
 
   /**
    * Creates a connect token that can be used as API KEY to connect items from the Frontend
+   * @param  {string} itemId - primary identifier of the Item
+   * @param {ConnectTokenOptions} options - options object to create a connect token
    * @returns {string} Access token to connect items with restrict access
    *
    * @throws {AxiosError<ErrorResponse>} status 404 If specified Item by 'id' does not exist or is not accessible by the user,
    *                                     status 403 if user is unauthorized
    */
-  async createConnectToken(itemId?: string): Promise<{ accessToken: string }> {
-    return this.createPostRequest(`connect_token`, null, { itemId })
+  async createConnectToken(itemId?: string, options?: ConnectTokenOptions): Promise<{ accessToken: string }> {
+    return this.createPostRequest(`connect_token`, null, { itemId, options })
   }
 }
 

@@ -24,6 +24,17 @@ export type TransactionFilters = {
 }
 
 /**
+ * @typedef ConnectTokenOptions
+ * @type {object}
+ * @property {string} clientUserId - Client's identifier for the user, it can be a ID, UUID or even an email.
+ * @property {string} webhookUrl - Url to be notified of this specific item changes
+ */
+export type ConnectTokenOptions = {
+  clientUserId?: string
+  webhookUrl?: string
+}
+
+/**
  * @typedef ConnectorFilters
  * @type {object}
  * @property {string} name - Connector´s name or alike name
