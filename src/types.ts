@@ -34,21 +34,6 @@ export type ConnectTokenOptions = {
   webhookUrl?: string
 }
 
-/**
- * @typedef ConnectorFilters
- * @type {object}
- * @property {string} name - Connector´s name or alike name
- * @property {CountryCode[]} countries - list of countries to filter available connectors
- * @property {ConnectorType[]} types - list of types to filter available connectors
- * @property {boolean} sandbox - recovers sandbox connectors. Default: false
- */
-export type ConnectorFilters = {
-  name?: string
-  countries?: CountryCode[]
-  types?: ConnectorType[]
-  sandbox?: boolean
-}
-
 export const CURRENCY_CODES = ['USD', 'ARS', 'BRL'] as const
 export type CurrencyCode = typeof CURRENCY_CODES[number]
 
@@ -263,6 +248,31 @@ export type Transaction = {
   providerCode: string | null
 }
 
+export const CONNECTOR_TYPES = [
+  'PERSONAL_BANK',
+  'BUSINESS_BANK',
+  'INVESTMENT',
+] as const
+/**
+ * @typedef ConnectorType
+ * Type of connectors available
+ */
+export type ConnectorType = typeof CONNECTOR_TYPES[number]
+
+export const PRODUCT_TYPES = [
+  'ACCOUNTS',
+  'CREDIT_CARDS',
+  'TRANSACTIONS',
+  'PAYMENT_DATA',
+  'INVESTMENTS',
+  'INVESTMENTS_TRANSACTIONS',
+  'IDENTITY',
+  'BROKERAGE_NOTE',
+  'OPPORTUNITIES',
+] as const
+
+export type ProductType = typeof PRODUCT_TYPES[number]
+
 export const CREDENTIAL_TYPES = [
   'number',
   'password',
@@ -281,227 +291,245 @@ export const CREDENTIAL_TYPES = [
  */
 export type CredentialType = typeof CREDENTIAL_TYPES[number]
 
-/**
- * @typedef CredentialSelectOption
- * @property {string} label - the text to display to the user for this option
- * @property {string} value - the actual value for this option
- */
 export type CredentialSelectOption = {
+  /** Value of the option */
   value: string
+  /** Displayable text or label of the option */
   label: string
 }
 
-/**
- * @typedef ConnectorCredential
- * @type {object}
- * @property {string} label - parameter label that describes it
- * @property {string} name - parameter key name
- * @property {CredentialType} type - type of parameter, used to create the form
- * @property {boolean} mfa - If parameter is used for MFA.
- * @property {string} data - Code for QR image to be resolved (credential type 'image')
- * @property {string} placeholder - Text to use for parameter placeholder in form
- * @property {string} validation - Validation regex to check on the submitted parameter value, before execution
- * @property {string} validationMessage - Validation error message to show to the user
- * @property {boolean} optional - Useful to allow the user to skip/ignoring an unneeded parameter
- * @property {string} instructions - Applies to MFA credential only - Detailed information that include details/hints that the user should be aware of
- * @property {string} assistiveText - Short text (either supplied by the connector or the institution itself) to help the user provide the credential
- * @property {CredentialSelectOption[]} options - Available options if credential is of type 'select'
- * @property expiresAt {Date} - Applies to MFA credential only. After this date the MFA parameter will expire and won't be accepted, must generate a new MFA request.
- */
 export type ConnectorCredential = {
+  /** parameter label that describes it */
   label: string
+  /** parameter key name */
   name: string
+  /** type of parameter to create the form */
   type?: CredentialType
+  /** If parameter is used for MFA. */
   mfa?: boolean
+  /** If parameter is image, base64 string is provided */
   data?: string
-  placeholder?: string
-  validation?: string
-  validationMessage?: string
-  optional: boolean
+  /** Assistive information to help the user provide us the credential */
   assistiveText?: string
-  instructions?: string
+  /** Available options if credential is of type 'select' */
   options?: CredentialSelectOption[]
+  /** Regex to validate input */
+  validation?: string
+  /** Error message of input validation on institution language */
+  validationMessage?: string
+  /** Input's placeholder for help */
+  placeholder?: string
+  /** Is this credential optional? */
+  optional?: boolean
+  /** Applies to MFA credential only - Detailed information that includes details/hints that the user should be aware of */
+  instructions?: string
+  /** Parameter expiration date, input value should be submitted before this date. */
   expiresAt?: Date
 }
 
-export const PRODUCT_TYPES = [
-  'ACCOUNTS',
-  'CREDIT_CARDS',
-  'TRANSACTIONS',
-  'PAYMENT_DATA',
-  'INVESTMENTS',
-  'IDENTITY',
-] as const
-
-export type ProductType = typeof PRODUCT_TYPES[number]
-
-/**
- * @typedef Connector
- * @type {object}
- * @property {number} id - primary identifier of the connector
- * @property {string} name - Connector's institution name
- * @property {string} institutionUrl - Url of the institution that the connector represents
- * @property {string} imageUrl - Image url of the institution.
- * @property {string} primaryColor - Primary color of the institution
- * @property {CountryCode} country - Country of the institution
- * @property {string} type - Type of the connector
- * @property {ConnectorCredential[]} credentials - List of parameters needed to execute the connector
- * @property {boolean} hasMfa - if true, the connection will expect an MFA token credential. If a credential is "mfa: true", it will be requested on the same step (1-step MFA), otherwise it will be requested as an extra step (2-step MFA).
- * @property {string} oauthUrl - (only for OAuth connector) this URL is used to connect the user and on success it will redirect to create the new item
- * @property {Date} createdAt - date of the creation of the connector
- */
 export type Connector = {
+  /** Primary identifier of the connector */
   id: number
+  /** Financial institution name */
   name: string
+  /** Url of the institution that the connector represents */
   institutionUrl: string
+  /** Image url of the institution. */
   imageUrl: string
-  primaryColor: string | null
+  /** Primary color of the institution */
+  primaryColor: string
+  /** Type of the connector */
   type: ConnectorType
-  country: CountryCode
+  /** Country of the institution */
+  country: string
+  /** List of parameters needed to execute the connector */
   credentials: ConnectorCredential[]
+  /** Has MFA steps */
   hasMFA: boolean
+  /** (only for OAuth connector) this URL is used to connect the user and on success it will redirect to create the new item */
   oauthUrl?: string
-  products: ProductType[]
+  /** object with information that descirbes current state of the institution connector
+   * ONLINE - the connector is working as expected
+   * OFFLINE - the connector is not currently available (API will refuse all connections with 400 status error)
+   * UNSTABLE - the connector is working but with degraded performance
+   */
   health?: {
     status: 'ONLINE' | 'OFFLINE' | 'UNSTABLE'
     stage: 'BETA' | null
   }
+  /** list of products supported by the institution */
+  products: ProductType[]
+  /** Connector creation date */
   createdAt: Date
 }
 
-export enum ItemStatus {
-  CREATING = 'CREATING',
-  LOGIN_ERROR = 'LOGIN_ERROR',
-  MERGING = 'MERGING',
-  OUTDATED = 'OUTDATED',
-  UPDATED = 'UPDATED',
-  UPDATING = 'UPDATING',
-  WAITING_USER_INPUT = 'WAITING_USER_INPUT',
-}
-
-export const CONNECTOR_TYPES = [
-  'PERSONAL_BANK',
-  'BUSINESS_BANK',
-  'INVOICE',
-  'INVESTMENT',
-] as const
-export type ConnectorType = typeof CONNECTOR_TYPES[number]
-
-/**
- * All possible states for Execution.status
- */
-export enum ExecutionStatus {
-  CREATED = 'CREATED',
-  CREATING = 'CREATING',
-  CREATE_ERROR = 'CREATE_ERROR',
-  LOGIN_MFA_IN_PROGRESS = 'LOGIN_MFA_IN_PROGRESS',
-  LOGIN_IN_PROGRESS = 'LOGIN_IN_PROGRESS',
-  WAITING_USER_INPUT = 'WAITING_USER_INPUT',
-  INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
-  ALREADY_LOGGED_IN = 'ALREADY_LOGGED_IN',
-  INVALID_CREDENTIALS_MFA = 'INVALID_CREDENTIALS_MFA',
-  SITE_NOT_AVAILABLE = 'SITE_NOT_AVAILABLE',
-  ACCOUNT_LOCKED = 'ACCOUNT_LOCKED',
-  CONNECTION_ERROR = 'CONNECTION_ERROR',
-  ACCOUNT_NEEDS_ACTION = 'ACCOUNT_NEEDS_ACTION',
-  USER_AUTHORIZATION_PENDING = 'USER_AUTHORIZATION_PENDING',
-  USER_AUTHORIZATION_NOT_GRANTED = 'USER_AUTHORIZATION_NOT_GRANTED',
-  USER_INPUT_TIMEOUT = 'USER_INPUT_TIMEOUT',
-  ACCOUNTS_IN_PROGRESS = 'ACCOUNTS_IN_PROGRESS',
-  CREDITCARDS_IN_PROGRESS = 'CREDITCARDS_IN_PROGRESS',
-  TRANSACTIONS_IN_PROGRESS = 'TRANSACTIONS_IN_PROGRESS',
-  PAYMENT_DATA_IN_PROGRESS = 'PAYMENT_DATA_IN_PROGRESS',
-  INVESTMENTS_IN_PROGRESS = 'INVESTMENTS_IN_PROGRESS',
-  IDENTITY_IN_PROGRESS = 'IDENTITY_IN_PROGRESS',
-  INVESTMENTS_TRANSACTIONS_IN_PROGRESS = 'INVESTMENTS_TRANSACTIONS_IN_PROGRESS',
-  OPPORTUNITIES_IN_PROGRESS = 'OPPORTUNITIES_IN_PROGRESS',
-  MERGING = 'MERGING',
-  MERGE_ERROR = 'MERGE_ERROR',
-  SUCCESS = 'SUCCESS',
-  PARTIAL_SUCCESS = 'PARTIAL_SUCCESS',
-  ERROR = 'ERROR',
+export type ConnectorFilters = {
+  /** Connector´s name or alike name */
+  name?: string
+  /** list of countries to filter available connectors */
+  countries?: string[]
+  /** list of types to filter available connectors */
+  types?: ConnectorType[]
+  /** recovers sandbox connectors. Default: false */
+  sandbox?: boolean
 }
 
 /**
- * List of ExecutionStatus values that are considered finished.
+ * The Item Create/Update parameters object to submit, which contains the needed user credentials.
  */
-export const FINISHED_STATUSES: ExecutionStatus[] = [
-  ExecutionStatus.SUCCESS,
-  ExecutionStatus.ERROR,
-  ExecutionStatus.MERGE_ERROR,
-  ExecutionStatus.INVALID_CREDENTIALS,
-  ExecutionStatus.ALREADY_LOGGED_IN,
-  ExecutionStatus.INVALID_CREDENTIALS_MFA,
-  ExecutionStatus.SITE_NOT_AVAILABLE,
-  ExecutionStatus.CONNECTION_ERROR,
-  ExecutionStatus.ACCOUNT_NEEDS_ACTION,
-  ExecutionStatus.USER_AUTHORIZATION_PENDING,
-  ExecutionStatus.USER_AUTHORIZATION_NOT_GRANTED,
-  ExecutionStatus.USER_INPUT_TIMEOUT,
-]
-
 export type Parameters = Record<string, string>
 
-export enum ExecutionErrorCode {
-  INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
-  INVALID_CREDENTIALS_MFA = 'INVALID_CREDENTIALS_MFA',
-  ALREADY_LOGGED_IN = 'ALREADY_LOGGED_IN',
-  SITE_NOT_AVAILABLE = 'SITE_NOT_AVAILABLE',
-  ACCOUNT_LOCKED = 'ACCOUNT_LOCKED',
-  UNEXPECTED_ERROR = 'UNEXPECTED_ERROR',
-  CONNECTION_ERROR = 'CONNECTION_ERROR',
-  ACCOUNT_NEEDS_ACTION = 'ACCOUNT_NEEDS_ACTION',
-  USER_AUTHORIZATION_PENDING = 'USER_AUTHORIZATION_PENDING',
-  USER_AUTHORIZATION_NOT_GRANTED = 'USER_AUTHORIZATION_NOT_GRANTED',
-  USER_INPUT_TIMEOUT = 'USER_INPUT_TIMEOUT',
+export type TriggeredBy = 'CLIENT' | 'USER' | 'SYNC' | 'INTERNAL'
+
+const CONNECTOR_EXECUTION_STATUSES = [
+  'LOGIN_IN_PROGRESS',
+  'WAITING_USER_INPUT',
+  'LOGIN_MFA_IN_PROGRESS',
+  'ACCOUNTS_IN_PROGRESS',
+  'TRANSACTIONS_IN_PROGRESS',
+  'PAYMENT_DATA_IN_PROGRESS',
+  'CREDITCARDS_IN_PROGRESS',
+  'INVESTMENTS_IN_PROGRESS',
+  'INVESTMENTS_TRANSACTIONS_IN_PROGRESS',
+  'OPPORTUNITIES_IN_PROGRESS',
+  'IDENTITY_IN_PROGRESS',
+] as const
+
+export type ConnectorExecutionStatus = typeof CONNECTOR_EXECUTION_STATUSES[number]
+
+const EXECUTION_ERROR_CODES = [
+  'INVALID_CREDENTIALS',
+  'ALREADY_LOGGED_IN',
+  'UNEXPECTED_ERROR',
+  'INVALID_CREDENTIALS_MFA',
+  'SITE_NOT_AVAILABLE',
+  'ACCOUNT_LOCKED',
+  'CONNECTION_ERROR',
+  'ACCOUNT_NEEDS_ACTION',
+  'USER_AUTHORIZATION_PENDING',
+  'USER_AUTHORIZATION_NOT_GRANTED',
+  'USER_INPUT_TIMEOUT',
+] as const
+
+export type ExecutionErrorCode = typeof EXECUTION_ERROR_CODES[number]
+
+export const EXECUTION_FINISHED_STATUSES = [
+  ...EXECUTION_ERROR_CODES,
+  'MERGE_ERROR',
+  'ERROR',
+  'SUCCESS',
+  'PARTIAL_SUCCESS',
+] as const
+
+export type ExecutionFinishedStatus = typeof EXECUTION_FINISHED_STATUSES[number]
+
+const EXECUTION_STATUSES = [
+  'CREATING',
+  'CREATE_ERROR',
+  'CREATED',
+  ...CONNECTOR_EXECUTION_STATUSES,
+  ...EXECUTION_FINISHED_STATUSES,
+] as const
+
+export type ExecutionStatus = typeof EXECUTION_STATUSES[number]
+
+export type ExecutionErrorResultMetadata = {
+  /** a provider id to relate the execution with an item, for example 'user_id'. useful to match webhook notifications with items */
+  providerId?: string
+  /** if the connector is MFA, this indicates if MFA credentials are required or not to continue the current execution */
+  hasMFA?: boolean
+  /** Credentials to be used in future executions. May differ or expand from the current execution credentials */
+  credentials?: Record<string, string>
 }
 
-export enum ParameterValidationErrorCode {
-  MISSING_REQUIRED_PARAMETER = '001',
-  RULE_VALIDATION_ERROR = '002',
-  DATE_RULE_VALIDATION_ERROR = '003',
-}
-
-export type ParameterValidationError = {
-  code: ParameterValidationErrorCode
-  message: string
-  parameter: string
-}
-
-export type ExecutionError = {
+export type ExecutionErrorResult = {
+  /** The specific execution error code */
   code: ExecutionErrorCode
+  /** A human-readable, short description of the error */
   message: string
-  /*! Some error cases might include extra metadata */
-  internalMessage?: string
+  /** The exact error message returned by the institution, if any was provided. */
   providerMessage?: string
+  /** Only used in Caixa Connector, for the device authorization flow */
+  metadata?: ExecutionErrorResultMetadata
+  /** Unstructured properties that provide additional context/information of the error.
+   * Used for some specific cases only, such as Caixa PF & PJ.
+   * @see https://docs.pluggy.ai/docs/errors-validations for more info. */
   attributes?: Record<string, string>
 }
 
+const ITEM_STATUSES = [
+  'UPDATED',
+  'UPDATING',
+  'WAITING_USER_INPUT',
+  'LOGIN_ERROR',
+  'OUTDATED',
+] as const
 /**
- * @typedef Item
- * @type {object}
- * @property {number} id - primary identifier of the Item
- * @property {string} status - Current status of the item
- * @property {Connector} connector - Connector associated with item
- * @property {string} executionStatus - Current execution status of item.
- * @property {Date} createdAt - Date of the first connection
- * @property {Date} updatedAt - Date of the last update on the connection
- * @property {Date} lastUpdatedAt - Date of the last successful connection sync of the institution data.
- * @property {ConnectorCredential} parameter - Data of a MFA parameter second step, as it has been requested by
- *                                             the provider after successfully logging in, this will be
- *                                             needed to be able to proceed with the connection.
+ * The current Item status.
+ *  UPDATED: The last sync process has completed successfully and all new data is available to collect.
+ *  UPDATING: An update process is in progress and will be updated soon.
+ *  WAITING_USER_INPUT: The connection requires user's input to continue the sync process, this is common for MFA authentication connectors
+ *  LOGIN_ERROR: The connection must be updated to execute again, it won't trigger updates until the parameters are updated.
+ *  OUTDATED: The parameters were correctly validated but there was an error in the last execution. It can be retried.
  */
-export type Item = {
-  id: string
-  status: ItemStatus
-  connector: Connector
-  executionStatus: ExecutionStatus
-  createdAt: Date
-  updatedAt: Date
+export type ItemStatus = typeof ITEM_STATUSES[number]
+
+export type ItemProductState = {
+  /** Whether product was collected in this last execution or not */
+  isUpdated: boolean
+  /** Date when product was last collected for this Item, null if it has never been. */
   lastUpdatedAt: Date | null
+}
+
+/**
+ * Only available when item.status is 'PARTIAL_SUCCESS'.
+ * Provides fine-grained information, per product, about their latest collection state.
+ *
+ * If a product was not requested at all, its entry will be null.
+ * If it was requested, it's entry will reflect if it has been collected or not.
+ *  If collected, isUpdated will be true, and lastUpdatedAt will be the Date when it happened
+ *  If not collected, isUpdated will be false, and lastUpdatedAt will be null it wasn't ever collected before, or the previous date if it was.
+ */
+export type ItemProductsStatusDetail = {
+  /** Collection details for 'ACCOUNTS' product, or null if it was not requested at all. */
+  accounts: ItemProductState | null
+  /** Collection details for 'CREDIT_CARDS' product, or null if it was not requested at all. */
+  creditCards: ItemProductState | null
+  /** Collection details for account 'TRANSACTIONS' product, or null if it was not requested at all. */
+  transactions: ItemProductState | null
+  /** Collection details for 'INVESTMENTS' product, or null if it was not requested at all. */
+  investments: ItemProductState | null
+  /** Collection details for 'IDENTITY' product, or null if it was not requested at all. */
+  identity: ItemProductState | null
+  /** Collection details for 'PAYMENT_DATA' product, or null if it was not requested at all. */
+  paymentData: ItemProductState | null
+}
+
+export type Item = {
+  /** primary identifier of the Item */
+  id: string
+  /** Connector's associated with item */
+  connector: Connector
+  /** Current status of the item */
+  status: ItemStatus
+  /** If status is 'PARTIAL_SUCCESS', this field will provide more detailed info about which products have been recovered or failed. */
+  statusDetail: ItemProductsStatusDetail | null
+  /** Item error details, if finished in an error status */
+  error: ExecutionErrorResult | null
+  /** Current execution status of item. */
+  executionStatus: ExecutionStatus
+  /** Date of the first connection */
+  createdAt: Date
+  /** Date of last item related data update */
+  updatedAt: Date
+  /** Last connection sync date with the institution. */
+  lastUpdatedAt: Date | null
+  /** In case of MFA connections, extra parameter will be available. */
   parameter: ConnectorCredential | null
-  error: ExecutionError | null
+  /** Url where notifications will be sent at any item's event */
   webhookUrl: string | null
+  /** A unique identifier for the User, to be able to identify it on your app */
+  clientUserId: string | null
 }
 
 export enum HttpStatusCode {
@@ -525,6 +553,18 @@ export type ErrorResponse = {
 export type NoServerResponseError = {
   code: '0'
   message: string
+}
+
+export enum ParameterValidationErrorCode {
+  MISSING_REQUIRED_PARAMETER = '001',
+  RULE_VALIDATION_ERROR = '002',
+  DATE_RULE_VALIDATION_ERROR = '003',
+}
+
+export type ParameterValidationError = {
+  code: ParameterValidationErrorCode
+  message: string
+  parameter: string
 }
 
 /**
