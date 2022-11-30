@@ -253,6 +253,7 @@ export const CONNECTOR_TYPES = [
   'BUSINESS_BANK',
   'INVESTMENT',
 ] as const
+
 /**
  * @typedef ConnectorType
  * Type of connectors available
@@ -464,6 +465,7 @@ const ITEM_STATUSES = [
   'LOGIN_ERROR',
   'OUTDATED',
 ] as const
+
 /**
  * The current Item status.
  *  UPDATED: The last sync process has completed successfully and all new data is available to collect.
