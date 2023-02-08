@@ -765,19 +765,37 @@ export type PageResponse<T> = ListResponse<T> & {
 }
 
 export type IdentityResponse = {
+  /** Primary identifier of the entity */
   id: string
+  /** Primary identifier of the Item */
   itemId: string
-  birthDate?: Date
-  taxNumber?: string
-  document?: string
-  documentType?: string
-  jobTitle?: string
-  fullName?: string
-  phoneNumbers?: PhoneNumber[]
-  emails?: Email[]
-  addresses?: Address[]
-  relations?: IdentityRelation[]
+  /** Date of birth of the owner */
+  birthDate: Date | null
+  /** Primary tax identifier (CNPJ or CUIT) */
+  taxNumber: string | null
+  /** Primary ID (DNI or CPF) */
+  document: string | null
+  /** Type of ID (DNI, CPF, CNPJ) */
+  documentType: string | null
+  /** Title of the job position */
+  jobTitle: string | null
+  /** For business connection, the business's name. */
+  companyName: string | null
+  /** Complete name of the account owner */
+  fullName: string | null
+  /** List of associated phone numbers */
+  phoneNumbers: PhoneNumber[] | null
+  /** List of associated emails */
+  emails: Email[] | null
+  /** List of associated phisical addresses */
+  addresses: Address[] | null
+  /** List of associated personal relationships */
+  relations: IdentityRelation[] | null
+  /** The investor's personality and motivation for investing  */
+  investorProfile: 'Conservative' | 'Moderate' | 'Aggressive' | null
+  /** Date of the first time that the Identity was recovered */
   createdAt: Date
+  /** Last update of the Identity data (if the data never changes, updatedAt will be the same as createdAt) */
   updatedAt: Date
 }
 
