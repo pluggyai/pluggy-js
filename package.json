@@ -75,7 +75,9 @@
           "replacements": [
             {
               "files": [
-                "src/version.ts"
+                "src/version.ts",
+                "dist/version.js",
+                "dist/version.d.ts"
               ],
               "from": "PLUGGY_JS_VERSION = '.*'",
               "to": "PLUGGY_JS_VERSION = '${nextRelease.version}'",
@@ -98,7 +100,9 @@
         {
           "assets": [
             "package.json",
-            "src/version.ts"
+            "src/version.ts",
+            "dist/version.js",
+            "dist/version.d.ts"
           ],
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }
