@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { isIsoDateString, parseIsoDate } from './utils'
-import { AXIOS_VERSION, PLUGGY_JS_VERSION } from './version'
+import { PLUGGY_JS_VERSION } from './version'
 
 type QueryParameters = {
   [key: string]: number | number[] | string | string[] | boolean
@@ -31,7 +31,7 @@ export class BaseApi {
     if (!this.service) {
       const config: AxiosRequestConfig = {
         headers: {
-          'Pluggy-User-Agent': `PluggyJs/${PLUGGY_JS_VERSION} Axios/${AXIOS_VERSION}`,
+          'Pluggy-User-Agent': `PluggyJs/${PLUGGY_JS_VERSION}`,
           'X-API-KEY': this.apiKey,
           'Content-Type': 'application/json',
         },
