@@ -76,14 +76,35 @@
             {
               "files": [
                 "src/version.ts",
-                "dist/version.js",
-                "dist/version.d.ts"
+                "dist/version.js"
               ],
               "from": "PLUGGY_JS_VERSION = '.*'",
               "to": "PLUGGY_JS_VERSION = '${nextRelease.version}'",
               "results": [
                 {
                   "file": "src/version.ts",
+                  "hasChanged": true,
+                  "numMatches": 1,
+                  "numReplacements": 1
+                },
+                {
+                  "file": "dist/version.js",
+                  "hasChanged": true,
+                  "numMatches": 1,
+                  "numReplacements": 1
+                }
+              ],
+              "countMatches": true
+            },
+            {
+              "files": [
+                "dist/version.js"
+              ],
+              "from": "PLUGGY_JS_VERSION = \".*\"",
+              "to": "PLUGGY_JS_VERSION = \"${nextRelease.version}\"",
+              "results": [
+                {
+                  "file": "dist/version.js",
                   "hasChanged": true,
                   "numMatches": 1,
                   "numReplacements": 1
