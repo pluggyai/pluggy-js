@@ -385,6 +385,7 @@ export type TriggeredBy = 'CLIENT' | 'USER' | 'SYNC' | 'INTERNAL'
 const CONNECTOR_EXECUTION_STATUSES = [
   'LOGIN_IN_PROGRESS',
   'WAITING_USER_INPUT',
+  'WAITING_USER_ACTION',
   'LOGIN_MFA_IN_PROGRESS',
   'ACCOUNTS_IN_PROGRESS',
   'TRANSACTIONS_IN_PROGRESS',
@@ -394,7 +395,7 @@ const CONNECTOR_EXECUTION_STATUSES = [
   'INVESTMENTS_TRANSACTIONS_IN_PROGRESS',
   'OPPORTUNITIES_IN_PROGRESS',
   'IDENTITY_IN_PROGRESS',
-  'PORTFOLIO_IN_PROGRESS'
+  'PORTFOLIO_IN_PROGRESS',
 ] as const
 
 export type ConnectorExecutionStatus = typeof CONNECTOR_EXECUTION_STATUSES[number]
@@ -436,17 +437,6 @@ const EXECUTION_STATUSES = [
 
 export type ExecutionStatus = typeof EXECUTION_STATUSES[number]
 
-export type ExecutionErrorResultMetadata = {
-  /** a provider id to relate the execution with an item, for example 'user_id'. useful to match webhook notifications with items */
-  providerId?: string
-  /** if the connector is MFA, this indicates if MFA credentials are required or not to continue the current execution */
-  hasMFA?: boolean
-  /** Credentials to be used in future executions. May differ or expand from the current execution credentials */
-  credentials?: Record<string, string>
-  /** Device nickname used when device authorization is pending */
-  deviceNickname?: string
-}
-
 export type ExecutionErrorResult = {
   /** The specific execution error code */
   code: ExecutionErrorCode
@@ -454,8 +444,6 @@ export type ExecutionErrorResult = {
   message: string
   /** The exact error message returned by the institution, if any was provided. */
   providerMessage?: string
-  /** Only used in Caixa Connector, for the device authorization flow */
-  metadata?: ExecutionErrorResultMetadata
   /** Unstructured properties that provide additional context/information of the error.
    * Used for some specific cases only, such as Caixa PF & PJ.
    * @see https://docs.pluggy.ai/docs/errors-validations for more info. */
@@ -511,6 +499,15 @@ export type ItemProductsStatusDetail = {
   paymentData: ItemProductState | null
 }
 
+export type UserAction = {
+  /** Human readble instructions that explains the user action to be done, */
+  instructions: string
+  /** Unstructured properties that provide additional context of the user action. */
+  attributes?: Record<string, string>
+  /** Parameter expiration date in ISO format, action should be done before this time. */
+  expiresAt?: string
+}
+
 export type Item = {
   /** primary identifier of the Item */
   id: string
@@ -536,6 +533,8 @@ export type Item = {
   webhookUrl: string | null
   /** A unique identifier for the User, to be able to identify it on your app */
   clientUserId: string | null
+  /** Useful info when item execution status is WAITING_USER_ACTION */
+  userAction: UserAction | null
 }
 
 export enum HttpStatusCode {
