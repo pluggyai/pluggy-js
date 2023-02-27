@@ -75,36 +75,13 @@
           "replacements": [
             {
               "files": [
-                "src/version.ts",
-                "dist/version.js"
+                "src/version.ts"
               ],
               "from": "PLUGGY_JS_VERSION = '.*'",
               "to": "PLUGGY_JS_VERSION = '${nextRelease.version}'",
               "results": [
                 {
                   "file": "src/version.ts",
-                  "hasChanged": true,
-                  "numMatches": 1,
-                  "numReplacements": 1
-                },
-                {
-                  "file": "dist/version.js",
-                  "hasChanged": true,
-                  "numMatches": 1,
-                  "numReplacements": 1
-                }
-              ],
-              "countMatches": true
-            },
-            {
-              "files": [
-                "dist/version.js"
-              ],
-              "from": "PLUGGY_JS_VERSION = \".*\"",
-              "to": "PLUGGY_JS_VERSION = \"${nextRelease.version}\"",
-              "results": [
-                {
-                  "file": "dist/version.js",
                   "hasChanged": true,
                   "numMatches": 1,
                   "numReplacements": 1
@@ -121,9 +98,7 @@
         {
           "assets": [
             "package.json",
-            "src/version.ts",
-            "dist/version.js",
-            "dist/version.d.ts"
+            "src/version.ts"
           ],
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }
