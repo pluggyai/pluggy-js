@@ -772,6 +772,8 @@ export type IdentityResponse = {
   taxNumber?: string
   document?: string
   documentType?: string
+  // The investor's profile based on their investing preferences
+  investorProfile: 'Conservative' | 'Moderate' | 'Aggressive' | null
   jobTitle?: string
   fullName?: string
   phoneNumbers?: PhoneNumber[]
