@@ -505,7 +505,7 @@ export type UserAction = {
   /** Unstructured properties that provide additional context of the user action. */
   attributes?: Record<string, string>
   /** Parameter expiration date in ISO format, action should be done before this time. */
-  expiresAt?: string
+  expiresAt?: Date
 }
 
 export type Item = {
