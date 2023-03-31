@@ -251,7 +251,10 @@ export type Transaction = {
 export const CONNECTOR_TYPES = [
   'PERSONAL_BANK',
   'BUSINESS_BANK',
+  'INVOICE',
   'INVESTMENT',
+  'TELECOMMUNICATION',
+  'OTHER',
 ] as const
 
 /**
