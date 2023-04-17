@@ -254,6 +254,8 @@ export const CONNECTOR_TYPES = [
   'INVOICE',
   'INVESTMENT',
   'TELECOMMUNICATION',
+  'DIGITAL_ECONOMY',
+  'PAYMENT_ACCOUNT',
   'OTHER',
 ] as const
 
