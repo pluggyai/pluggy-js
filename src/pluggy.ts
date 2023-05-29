@@ -15,6 +15,7 @@ import {
   Parameters,
   ListResponse,
   ConnectTokenOptions,
+  ProductType,
 } from './types'
 
 /**
@@ -84,6 +85,9 @@ class Pluggy extends BaseApi {
    * @param connectorId The Connector's id
    * @param parameters A map of name and value for the needed credentials
    * @param webhookUrl - The webhookUrl to send item notifications to (optional)
+   * @param products - Products to include in item execution and collection steps.
+   *                   Optional. If not specified, all products will be collected.
+   *
    * @returns {Item} the created Item object
    *
    * @throws {AxiosError<ErrorResponse>} status 404 If connector is not found or accessible, status 403 if user is unauthorized
@@ -93,12 +97,14 @@ class Pluggy extends BaseApi {
   async createItem(
     connectorId: number,
     parameters: Parameters,
-    webhookUrl?: string
+    webhookUrl?: string,
+    products?: ProductType[]
   ): Promise<Item> {
     return this.createPostRequest(`items`, null, {
       connectorId,
       parameters,
       webhookUrl,
+      products,
     })
   }
 
@@ -282,7 +288,10 @@ class Pluggy extends BaseApi {
    * @throws {AxiosError<ErrorResponse>} status 404 If specified Item by 'id' does not exist or is not accessible by the user,
    *                                     status 403 if user is unauthorized
    */
-  async createConnectToken(itemId?: string, options?: ConnectTokenOptions): Promise<{ accessToken: string }> {
+  async createConnectToken(
+    itemId?: string,
+    options?: ConnectTokenOptions
+  ): Promise<{ accessToken: string }> {
     return this.createPostRequest(`connect_token`, null, { itemId, options })
   }
 }
