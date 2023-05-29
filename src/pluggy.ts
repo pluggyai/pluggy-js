@@ -86,7 +86,7 @@ class Pluggy extends BaseApi {
    * @param parameters A map of name and value for the needed credentials
    * @param webhookUrl - The webhookUrl to send item notifications to (optional)
    * @param products - Products to include in item execution and collection steps.
-   *                   Optional. If not specified, all products will be collected.
+   *                   Optional. If not specified, all products available to your subscription level will be collected.
    *
    * @returns {Item} the created Item object
    *
