@@ -564,7 +564,7 @@ export type Item = {
   /** The number of consecutive failed login attempts for this item. */
   consecutiveFailedLoginAttempts: number
   /** Date of next auto-sync, or null if auto-sync is disabled for this Item */
-  nextUpdateAt: Date | null
+  nextAutoSyncAt: Date | null
 }
 
 export enum HttpStatusCode {
