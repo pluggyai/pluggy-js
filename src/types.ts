@@ -512,6 +512,8 @@ export type ItemProductsStatusDetail = {
 }
 
 export type UserAction = {
+  /** What type of action is required from the user, scanning a QR or authorizing access from an app. */
+  type: 'qr' | 'authorize-access'
   /** Human readble instructions that explains the user action to be done, */
   instructions: string
   /** Unstructured properties that provide additional context of the user action. */
@@ -549,6 +551,8 @@ export type Item = {
   userAction: UserAction | null
   /** The number of consecutive failed login attempts for this item. */
   consecutiveFailedLoginAttempts: number
+  /** Date of next auto-sync, or null if auto-sync is disabled for this Item */
+  nextUpdateAt: Date | null
 }
 
 export enum HttpStatusCode {
