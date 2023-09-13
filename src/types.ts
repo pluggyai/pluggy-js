@@ -371,6 +371,10 @@ export type Connector = {
   resetPasswordUrl?: string
   /** list of products supported by the institution */
   products: ProductType[]
+  /** Indicates that the connector is Open Finance */
+  isOpenFinance: boolean
+  /** Indicates that the connector is sandbox */
+  isSandbox: boolean
   /** Connector creation date */
   createdAt: Date
 }
