@@ -276,6 +276,7 @@ export const PRODUCT_TYPES = [
   'BROKERAGE_NOTE',
   'OPPORTUNITIES',
   'INCOME_REPORTS',
+  'PORTFOLIO',
   'MOVE_SECURITY',
 ] as const
 
