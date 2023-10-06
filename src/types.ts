@@ -247,7 +247,6 @@ export type Transaction = {
   currencyCode: CurrencyCode
   providerCode: string | null
 }
-
 export const CONNECTOR_TYPES = [
   'PERSONAL_BANK',
   'BUSINESS_BANK',
@@ -258,7 +257,6 @@ export const CONNECTOR_TYPES = [
   'PAYMENT_ACCOUNT',
   'OTHER',
 ] as const
-
 /**
  * @typedef ConnectorType
  * Type of connectors available
@@ -275,8 +273,8 @@ export const PRODUCT_TYPES = [
   'IDENTITY',
   'BROKERAGE_NOTE',
   'OPPORTUNITIES',
-  'INCOME_REPORTS',
   'PORTFOLIO',
+  'INCOME_REPORTS',
   'MOVE_SECURITY',
   'LOANS',
 ] as const
@@ -337,6 +335,15 @@ export type ConnectorCredential = {
   expiresAt?: Date
 }
 
+export type ConnectorHealthDetails = {
+  /** Percentage of connections that have been working as expected in the last 6 hours. */
+  connectionRateLast6Hours: number | null
+  /** Total connections in the last 6 hours for this connector */
+  connectionsLast6Hours: number | null
+  /** Detailed error message about the current connector status */
+  error?: string
+}
+
 export type Connector = {
   /** Primary identifier of the connector */
   id: number
@@ -360,23 +367,35 @@ export type Connector = {
   oauth?: boolean
   /** (only for OAuth connector) this URL is used to connect the user and on success it will redirect to create the new item */
   oauthUrl?: string
-  /** object with information that descirbes current state of the institution connector
-   * ONLINE - the connector is working as expected
-   * OFFLINE - the connector is not currently available (API will refuse all connections with 400 status error)
-   * UNSTABLE - the connector is working but with degraded performance
-   */
-  health?: {
+  /** object with information that descirbes current state of the institution connector */
+  health: {
+    /**
+     * Current status of the connector.
+     * ONLINE - the connector is working as expected
+     * OFFLINE - the connector is not currently available (API will refuse all connections with 400 status error)
+     * UNSTABLE - the connector is working but with degraded performance
+     */
     status: 'ONLINE' | 'OFFLINE' | 'UNSTABLE'
+    /**
+     * Newly released connectors may be in 'BETA' stage for a while, which means that it
+     * might be pending for some features, bugfixes and improvements (your feedback is more than welcome!).
+     * Once the connector is fully productive, stage field will be set to 'null'.
+     */
     stage: 'BETA' | null
+    /**
+     * Detailed information about how the connector is performing, and/or
+     * more context about the current status of the connector.
+     */
+    details?: ConnectorHealthDetails
   }
-  /** Url where user can reset their account password */
-  resetPasswordUrl?: string
-  /** list of products supported by the institution */
-  products: ProductType[]
   /** Indicates that the connector is Open Finance */
   isOpenFinance: boolean
   /** Indicates that the connector is sandbox */
   isSandbox: boolean
+  /** Url where user can reset their account password */
+  resetPasswordUrl?: string
+  /** list of products supported by the institution */
+  products: ProductType[]
   /** Connector creation date */
   createdAt: Date
 }
