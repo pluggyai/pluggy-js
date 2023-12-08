@@ -1,6 +1,6 @@
 {
   "name": "pluggy-js",
-  "version": "0.18.4",
+  "version": "0.18.5",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
