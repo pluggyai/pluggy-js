@@ -287,6 +287,8 @@ export const CREDENTIAL_TYPES = [
   'text',
   'image',
   'select',
+  'ethaddress',
+  'hcaptcha',
 ] as const
 /**
  * @typedef CredentialType
