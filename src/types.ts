@@ -247,6 +247,7 @@ export type Transaction = {
   currencyCode: CurrencyCode
   providerCode: string | null
 }
+
 export const CONNECTOR_TYPES = [
   'PERSONAL_BANK',
   'BUSINESS_BANK',
@@ -277,8 +278,8 @@ export const PRODUCT_TYPES = [
   'INCOME_REPORTS',
   'MOVE_SECURITY',
   'LOANS',
+  'BENEFITS',
 ] as const
-
 export type ProductType = typeof PRODUCT_TYPES[number]
 
 export const CREDENTIAL_TYPES = [
@@ -394,8 +395,12 @@ export type Connector = {
   isOpenFinance: boolean
   /** Indicates that the connector is sandbox */
   isSandbox: boolean
-  /** Indicates that the connector supports payment initiation */
+  /** Indicates that the connector supports Payment Initiation */
   supportsPaymentInitiation: boolean
+  /** Indicates that the connector supports Scheduled Payments */
+  supportsScheduledPayments: boolean
+  /** Indicates that the connector supports Smart Transfers */
+  supportsSmartTransfers: boolean
   /** Url where user can reset their account password */
   resetPasswordUrl?: string
   /** list of products supported by the institution */
@@ -413,6 +418,10 @@ export type ConnectorFilters = {
   types?: ConnectorType[]
   /** recovers sandbox connectors. Default: false */
   sandbox?: boolean
+  /** filters in (true) or out (false) open finance connectors. Default: undefined */
+  isOpenFinance?: boolean
+  /** filters in (true) or out (false) payment initiation connectors. Default: undefined */
+  supportsPaymentInitiation?: boolean
 }
 
 /**
