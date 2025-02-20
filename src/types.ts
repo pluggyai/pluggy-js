@@ -32,6 +32,10 @@ export type TransactionFilters = {
 export type ConnectTokenOptions = {
   clientUserId?: string
   webhookUrl?: string
+  /** Url where the user will be redirected to after the oauth flow */
+  oauthRedirectUri?: string;
+  /** Avoid duplicate items per user */
+  avoidDuplicates?: boolean;
 }
 
 export const CURRENCY_CODES = ['USD', 'ARS', 'BRL'] as const
