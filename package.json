@@ -39,7 +39,7 @@
     "@typescript-eslint/parser": "^2.16.0",
     "eslint": "^6.8.0",
     "prettier": "^1.19.1",
-    "rollup": "^1.17.0",
+    "rollup": "^2.80.0",
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-license": "^2.2.0",
